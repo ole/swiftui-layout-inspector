@@ -1,12 +1,13 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var width: CGFloat = 300
-    @State var selectedView: String? = nil
+    @State private var width: CGFloat = 300
+    @State private var selectedView: String? = nil
+    @State private var generation: Int = 0
 
     var body: some View {
         VStack {
-            VStack(spacing: 50) {
+            VStack(spacing: 24) {
                 HStack(spacing: 0) {
                     Rectangle().fill(.green)
                         .debugLayout("green")
@@ -19,6 +20,7 @@ struct ContentView: View {
                 .clearConsole()
                 .environment(\.debugLayoutSelection, selectedView)
                 .frame(width: width, height: 80)
+                .id(generation)
 
                 LabeledContent {
                     Slider(value: $width, in: 100...500, step: 1)
@@ -26,6 +28,11 @@ struct ContentView: View {
                     Text("Width: \(width, format: .number.precision(.fractionLength(0)))")
                         .monospacedDigit()
                 }
+
+                Button("Reset layout cache") {
+                    generation += 1
+                }
+                .buttonStyle(.bordered)
             }
             .padding()
 
