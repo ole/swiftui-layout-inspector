@@ -28,10 +28,10 @@ struct DebugLayout: Layout {
 
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
         assert(subviews.count == 1)
-        log(label, action: "P", value: proposal.pretty)
-        let result = subviews[0].sizeThatFits(proposal)
-        log(label, action: "⇒", value: result.pretty)
-        return result
+        log(label, action: .proposal(proposal))
+        let response = subviews[0].sizeThatFits(proposal)
+        log(label, action: .response(response))
+        return response
     }
 
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
@@ -91,16 +91,47 @@ final class Console: ObservableObject {
     @Published var log: [LogItem] = []
 
     struct LogItem: Identifiable {
+        enum Action {
+            case proposal(ProposedViewSize)
+            case response(CGSize)
+            case proposalAndResponse(proposal: ProposedViewSize, response: CGSize)
+        }
+
         var id: UUID = .init()
         var label: String
-        var action: String
-        var value: String
+        var action: Action
+
+        var proposal: ProposedViewSize? {
+            switch action {
+            case .proposal(let p): return p
+            case .response(_): return nil
+            case .proposalAndResponse(proposal: let p, response: _): return p
+            }
+        }
+
+        var response: CGSize? {
+            switch action {
+            case .proposal(_): return nil
+            case .response(let r): return r
+            case .proposalAndResponse(proposal: _, response: let r): return r
+            }
+        }
     }
 }
 
-func log(_ label: String, action: String, value: String) {
+func log(_ label: String, action: Console.LogItem.Action) {
     DispatchQueue.main.async {
-        Console.shared.log.append(.init(label: label, action: action, value: value))
+        if var lastLogItem = Console.shared.log.last,
+           lastLogItem.label == label,
+           case .proposal(let proposal) = lastLogItem.action,
+           case .response(let response) = action
+        {
+            Console.shared.log.removeLast()
+            lastLogItem.action = .proposalAndResponse(proposal: proposal, response: response)
+            Console.shared.log.append(lastLogItem)
+        } else {
+            Console.shared.log.append(.init(label: label, action: action))
+        }
     }
 }
 
@@ -143,13 +174,31 @@ struct ConsoleView: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal, 8)
 
-                            Text(item.action)
-                                .font(.headline)
+                            if let proposal = item.proposal {
+                                Text("P")
+                                    .font(.headline)
 
-                            Text(item.value)
-                                .monospacedDigit()
-                                .gridColumnAlignment(.trailing)
-                                .padding(.horizontal, 8)
+                                Text(proposal.pretty)
+                                    .monospacedDigit()
+                                    .gridColumnAlignment(.trailing)
+                                    .padding(.horizontal, 8)
+                            } else {
+                                Text("")
+                                Text("")
+                            }
+
+                            if let response = item.response {
+                                Text("⇒")
+                                    .font(.headline)
+
+                                Text(response.pretty)
+                                    .monospacedDigit()
+                                    .gridColumnAlignment(.trailing)
+                                    .padding(.horizontal, 8)
+                            } else {
+                                Text("")
+                                Text("")
+                            }
                         }
                         .padding(.vertical, 8)
                         .foregroundColor(isSelected ? .white : nil)
