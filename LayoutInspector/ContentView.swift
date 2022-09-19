@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State var width: CGFloat = 300
+    @State var selectedView: String? = nil
 
     var body: some View {
         VStack {
@@ -16,6 +17,7 @@ struct ContentView: View {
                 }
                 .debugLayout("HStack")
                 .clearConsole()
+                .environment(\.debugLayoutSelection, selectedView)
                 .frame(width: width, height: 80)
 
                 LabeledContent {
@@ -28,6 +30,9 @@ struct ContentView: View {
             .padding()
 
             ConsoleView()
+                .onPreferenceChange(Selection.self) { selection in
+                    selectedView = selection
+                }
         }
     }
 }

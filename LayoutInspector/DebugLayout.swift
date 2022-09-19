@@ -5,7 +5,21 @@ import SwiftUI
 
 extension View {
     func debugLayout(_ label: String) -> some View {
-        DebugLayout(label: label) { self }
+        DebugLayout(label: label) {
+            self
+        }
+        .modifier(DebugLayoutWrapper(label: label))
+    }
+}
+
+struct DebugLayoutWrapper: ViewModifier {
+    var label: String
+    @Environment(\.debugLayoutSelection) private var selection: String?
+
+    func body(content: Content) -> some View {
+        let isSelected = label == selection
+        content
+            .border(isSelected ? Color.blue : .clear, width: 2)
     }
 }
 
@@ -90,20 +104,44 @@ func log(_ label: String, action: String, value: String) {
     }
 }
 
+struct DebugLayoutSelection: EnvironmentKey {
+    static var defaultValue: String? { nil }
+}
+
+extension EnvironmentValues {
+    var debugLayoutSelection: String? {
+        get { self[DebugLayoutSelection.self] }
+        set { self[DebugLayoutSelection.self] = newValue }
+    }
+}
+
+struct Selection<Value: Equatable>: PreferenceKey {
+    static var defaultValue: Value? { nil }
+
+    static func reduce(value: inout Value?, nextValue: () -> Value?) {
+        value = value ?? nextValue()
+    }
+}
+
 struct ConsoleView: View {
     @ObservedObject var console = Console.shared
+    @State private var selection: String? = nil
 
     var body: some View {
         ScrollView(.vertical) {
             VStack(alignment: .leading, spacing: 16) {
                 Text("Layout Log")
                     .font(.headline)
+                    .padding(.top, 16)
+                    .padding(.horizontal, 8)
 
-                Grid(alignment: .leadingFirstTextBaseline, horizontalSpacing: 8, verticalSpacing: 8) {
+                Grid(alignment: .leadingFirstTextBaseline, horizontalSpacing: 0, verticalSpacing: 0) {
                     ForEach(console.log) { item in
+                        let isSelected = selection == item.label
                         GridRow {
                             Text(item.label)
                                 .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.horizontal, 8)
 
                             Text(item.action)
                                 .font(.headline)
@@ -111,6 +149,14 @@ struct ConsoleView: View {
                             Text(item.value)
                                 .monospacedDigit()
                                 .gridColumnAlignment(.trailing)
+                                .padding(.horizontal, 8)
+                        }
+                        .padding(.vertical, 8)
+                        .foregroundColor(isSelected ? .white : nil)
+                        .background(isSelected ? Color.accentColor : .clear)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            selection = isSelected ? nil : item.label
                         }
 
                         Divider()
@@ -118,8 +164,8 @@ struct ConsoleView: View {
                     }
                 }
             }
-            .padding()
         }
         .background(Color(uiColor: .secondarySystemBackground))
+        .preference(key: Selection.self, value: selection)
     }
 }
