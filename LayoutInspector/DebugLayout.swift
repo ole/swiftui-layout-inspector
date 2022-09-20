@@ -17,9 +17,15 @@ struct DebugLayoutWrapper: ViewModifier {
     @Environment(\.debugLayoutSelection) private var selection: String?
 
     func body(content: Content) -> some View {
-        let isSelected = label == selection
         content
-            .border(isSelected ? Color.pink : .clear, width: 2)
+            .overlay {
+                let isSelected = label == selection
+                if isSelected {
+                    Rectangle()
+                        .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [5]))
+                        .foregroundColor(.pink)
+                }
+            }
     }
 }
 
@@ -156,61 +162,55 @@ struct Selection<Value: Equatable>: PreferenceKey {
 
 struct ConsoleView: View {
     @ObservedObject var console = Console.shared
-    @State private var selection: String? = "Text"
+    @State private var selection: String? = nil
 
     var body: some View {
         ScrollView(.vertical) {
-            VStack(alignment: .leading, spacing: 16) {
-                Text("Layout Log")
-                    .font(.headline)
-                    .padding(.top, 16)
-                    .padding(.horizontal, 8)
+            Grid(alignment: .leadingFirstTextBaseline, horizontalSpacing: 0, verticalSpacing: 0) {
+                GridRow {
+                    Text("View")
+                    Text("Proposal")
+                    Text("Response")
+                }
+                .font(.headline)
+                .padding(.vertical, 4)
+                .padding(.horizontal, 8)
 
-                Grid(alignment: .leadingFirstTextBaseline, horizontalSpacing: 0, verticalSpacing: 0) {
-                    GridRow {
-                        Text("View")
-                        Text("Proposal")
-                        Text("Response")
-                    }
-                    .font(.headline)
+                Rectangle().fill(.secondary)
+                    .frame(height: 1)
+                    .gridCellUnsizedAxes(.horizontal)
                     .padding(.vertical, 4)
                     .padding(.horizontal, 8)
 
-                    Rectangle().fill(.secondary)
-                        .frame(height: 1)
-                        .gridCellUnsizedAxes(.horizontal)
-                        .padding(.vertical, 4)
-                        .padding(.horizontal, 8)
+                ForEach(console.log) { item in
+                    let isSelected = selection == item.label
+                    GridRow {
+                        Text(item.label)
+                            .font(.body)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
 
-                    ForEach(console.log) { item in
-                        let isSelected = selection == item.label
-                        GridRow {
-                            Text(item.label)
-                                .font(.body)
-                                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                        Text(item.proposal?.pretty ?? "…")
+                            .monospacedDigit()
+                            .fixedSize()
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
 
-                            Text(item.proposal?.pretty ?? "…")
-                                .monospacedDigit()
-                                .fixedSize()
-                                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-
-                            Text(item.response?.pretty ?? "…")
-                                .monospacedDigit()
-                                .fixedSize()
-                                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-                        }
-                        .font(.callout)
-                        .padding(.vertical, 4)
-                        .padding(.horizontal, 8)
-                        .foregroundColor(isSelected ? .white : nil)
-                        .background(isSelected ? Color.accentColor : .clear)
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            selection = isSelected ? nil : item.label
-                        }
+                        Text(item.response?.pretty ?? "…")
+                            .monospacedDigit()
+                            .fixedSize()
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                    }
+                    .font(.callout)
+                    .padding(.vertical, 4)
+                    .padding(.horizontal, 8)
+                    .foregroundColor(isSelected ? .white : nil)
+                    .background(isSelected ? Color.accentColor : .clear)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        selection = isSelected ? nil : item.label
                     }
                 }
             }
+            .padding(.vertical, 8)
         }
         .background(Color(uiColor: .secondarySystemBackground))
         .preference(key: Selection.self, value: selection)

@@ -2,34 +2,42 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var width: CGFloat = 300
+    @State private var height: CGFloat = 100
     @State private var selectedView: String? = nil
     @State private var generation: Int = 0
 
     var subject: some View {
-        HStack {
-            Rectangle().fill(.green)
-                .debugLayout("green")
-            Text("Hello world")
-                .debugLayout("Text")
-            Rectangle().fill(.yellow)
-                .debugLayout("yellow")
-        }
-        .debugLayout("HStack")
+        Text("Hello")
+            .debugLayout("Text")
+            .aspectRatio(1, contentMode: .fit)
+            .debugLayout("aspectRatio")
     }
 
     var body: some View {
         VStack {
-            VStack(spacing: 24) {
+            VStack {
                 subject
                     .clearConsole()
                     .environment(\.debugLayoutSelection, selectedView)
-                    .frame(width: width, height: 80)
+                    .frame(width: width, height: height)
+                    .overlay {
+                        Rectangle()
+                            .strokeBorder(style: StrokeStyle(dash: [5]))
+                    }
                     .id(generation)
+                    .padding(.bottom, 16)
 
                 LabeledContent {
-                    Slider(value: $width, in: 100...500, step: 1)
+                    Slider(value: $width, in: 50...500, step: 1)
                 } label: {
                     Text("Width: \(width, format: .number.precision(.fractionLength(0)))")
+                        .monospacedDigit()
+                }
+
+                LabeledContent {
+                    Slider(value: $height, in: 50...500, step: 1)
+                } label: {
+                    Text("Height: \(height, format: .number.precision(.fractionLength(0)))")
                         .monospacedDigit()
                 }
 
