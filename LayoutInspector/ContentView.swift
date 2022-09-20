@@ -11,47 +11,60 @@ struct ContentView: View {
             .debugLayout("Text")
             .aspectRatio(1, contentMode: .fit)
             .debugLayout("aspectRatio")
+            .padding()
+            .debugLayout("padding")
+            .background {
+                Color.yellow
+                    .debugLayout("yellow")
+            }
+            .debugLayout("background")
     }
 
     var body: some View {
         VStack {
             VStack {
                 subject
-                    .clearConsole()
-                    .environment(\.debugLayoutSelection, selectedView)
+                    .startDebugLayout(selection: selectedView)
+                    .id(generation)
                     .frame(width: width, height: height)
                     .overlay {
                         Rectangle()
                             .strokeBorder(style: StrokeStyle(dash: [5]))
                     }
-                    .id(generation)
                     .padding(.bottom, 16)
 
-                LabeledContent {
-                    Slider(value: $width, in: 50...500, step: 1)
-                } label: {
-                    Text("Width: \(width, format: .number.precision(.fractionLength(0)))")
-                        .monospacedDigit()
-                }
+                VStack {
+                    LabeledContent {
+                        HStack {
+                            Slider(value: $width, in: 50...500, step: 1)
+                            Stepper("Width", value: $width)
+                        }
+                        .labelsHidden()
+                    } label: {
+                        Text("W \(width, format: .number.precision(.fractionLength(0)))")
+                            .monospacedDigit()
+                    }
 
-                LabeledContent {
-                    Slider(value: $height, in: 50...500, step: 1)
-                } label: {
-                    Text("Height: \(height, format: .number.precision(.fractionLength(0)))")
-                        .monospacedDigit()
-                }
+                    LabeledContent {
+                        HStack {
+                            Slider(value: $height, in: 50...500, step: 1)
+                            Stepper("Height", value: $height)
+                        }
+                        .labelsHidden()
+                    } label: {
+                        Text("H \(height, format: .number.precision(.fractionLength(0)))")
+                            .monospacedDigit()
+                    }
 
-                Button("Reset layout cache") {
-                    generation += 1
+                    Button("Reset layout cache") {
+                        generation += 1
+                    }
                 }
                 .buttonStyle(.bordered)
             }
             .padding()
 
-            ConsoleView()
-                .onPreferenceChange(Selection.self) { selection in
-                    selectedView = selection
-                }
+            DebugLayoutLogView(selection: $selectedView)
         }
     }
 }
