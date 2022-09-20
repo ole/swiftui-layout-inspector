@@ -5,22 +5,26 @@ struct ContentView: View {
     @State private var selectedView: String? = nil
     @State private var generation: Int = 0
 
+    var subject: some View {
+        HStack {
+            Rectangle().fill(.green)
+                .debugLayout("green")
+            Text("Hello world")
+                .debugLayout("Text")
+            Rectangle().fill(.yellow)
+                .debugLayout("yellow")
+        }
+        .debugLayout("HStack")
+    }
+
     var body: some View {
         VStack {
             VStack(spacing: 24) {
-                HStack(spacing: 0) {
-                    Rectangle().fill(.green)
-                        .debugLayout("green")
-                    Text("Hello world")
-                        .debugLayout("Text")
-                    Rectangle().fill(.yellow)
-                        .debugLayout("yellow")
-                }
-                .debugLayout("HStack")
-                .clearConsole()
-                .environment(\.debugLayoutSelection, selectedView)
-                .frame(width: width, height: 80)
-                .id(generation)
+                subject
+                    .clearConsole()
+                    .environment(\.debugLayoutSelection, selectedView)
+                    .frame(width: width, height: 80)
+                    .id(generation)
 
                 LabeledContent {
                     Slider(value: $width, in: 100...500, step: 1)

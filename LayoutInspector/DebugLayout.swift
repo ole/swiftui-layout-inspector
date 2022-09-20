@@ -19,7 +19,7 @@ struct DebugLayoutWrapper: ViewModifier {
     func body(content: Content) -> some View {
         let isSelected = label == selection
         content
-            .border(isSelected ? Color.blue : .clear, width: 2)
+            .border(isSelected ? Color.pink : .clear, width: 2)
     }
 }
 
@@ -156,7 +156,7 @@ struct Selection<Value: Equatable>: PreferenceKey {
 
 struct ConsoleView: View {
     @ObservedObject var console = Console.shared
-    @State private var selection: String? = nil
+    @State private var selection: String? = "Text"
 
     var body: some View {
         ScrollView(.vertical) {
@@ -167,49 +167,47 @@ struct ConsoleView: View {
                     .padding(.horizontal, 8)
 
                 Grid(alignment: .leadingFirstTextBaseline, horizontalSpacing: 0, verticalSpacing: 0) {
+                    GridRow {
+                        Text("View")
+                        Text("Proposal")
+                        Text("Response")
+                    }
+                    .font(.headline)
+                    .padding(.vertical, 4)
+                    .padding(.horizontal, 8)
+
+                    Rectangle().fill(.secondary)
+                        .frame(height: 1)
+                        .gridCellUnsizedAxes(.horizontal)
+                        .padding(.vertical, 4)
+                        .padding(.horizontal, 8)
+
                     ForEach(console.log) { item in
                         let isSelected = selection == item.label
                         GridRow {
                             Text(item.label)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(.horizontal, 8)
+                                .font(.body)
+                                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
 
-                            if let proposal = item.proposal {
-                                Text("P")
-                                    .font(.headline)
+                            Text(item.proposal?.pretty ?? "…")
+                                .monospacedDigit()
+                                .fixedSize()
+                                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
 
-                                Text(proposal.pretty)
-                                    .monospacedDigit()
-                                    .gridColumnAlignment(.trailing)
-                                    .padding(.horizontal, 8)
-                            } else {
-                                Text("")
-                                Text("")
-                            }
-
-                            if let response = item.response {
-                                Text("⇒")
-                                    .font(.headline)
-
-                                Text(response.pretty)
-                                    .monospacedDigit()
-                                    .gridColumnAlignment(.trailing)
-                                    .padding(.horizontal, 8)
-                            } else {
-                                Text("")
-                                Text("")
-                            }
+                            Text(item.response?.pretty ?? "…")
+                                .monospacedDigit()
+                                .fixedSize()
+                                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                         }
-                        .padding(.vertical, 8)
+                        .font(.callout)
+                        .padding(.vertical, 4)
+                        .padding(.horizontal, 8)
                         .foregroundColor(isSelected ? .white : nil)
                         .background(isSelected ? Color.accentColor : .clear)
                         .contentShape(Rectangle())
                         .onTapGesture {
                             selection = isSelected ? nil : item.label
                         }
-
-                        Divider()
-                            .gridCellUnsizedAxes(.horizontal)
                     }
                 }
             }
