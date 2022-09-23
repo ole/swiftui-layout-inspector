@@ -6,17 +6,60 @@ struct ContentView: View {
     @State private var selectedView: String? = nil
     @State private var generation: Int = 0
 
+    // MARK: - Edit here
+
+    /// The view tree whose layout you want to inspect. Add `.debugLayout()` calls at
+    /// each point where you want to inspect the layout algorithm, i.e. what sizes are
+    /// being proposed and returned. We call these **inspection points**.
+    ///
+    /// ## Suggested examples
+    ///
+    /// ### Padding
+    ///
+    ///     var subject: some View {
+    ///         Text("Hello world")
+    ///             .debugLayout("Text")
+    ///             .padding(10)
+    ///             .debugLayout("padding")
+    ///             .border(Color.green)
+    ///             .debugLayout("border")
+    ///     }
+    ///
+    /// ### Stacks
+    ///
+    ///     var subject: some View {
+    ///         HStack(spacing: 10) {
+    ///             Rectangle().fill(.green)
+    ///                 .debugLayout("green")
+    ///             Text("Hello world")
+    ///                 .debugLayout("Text")
+    ///             Rectangle().fill(.yellow)
+    ///                 .debugLayout("yellow")
+    ///         }
+    ///         .debugLayout("HStack")
+    ///     }
+    ///
+    /// ### fixedSize
+    ///
+    ///     var subject: some View {
+    ///         Text("Lorem ipsum dolor sit amet")
+    ///             .debugLayout("Text")
+    ///             .fixedSize()
+    ///             .debugLayout("fixedSize")
+    ///             .frame(width: 100)
+    ///             .debugLayout("frame")
+    ///             .border(Color.green)
+    ///     }
     var subject: some View {
         Text("Hello world")
             .debugLayout("Text")
-            .padding()
+            .padding(10)
             .debugLayout("padding")
-            .background {
-                Color.yellow
-                    .debugLayout("yellow")
-            }
-            .debugLayout("background")
+            .border(Color.green)
+            .debugLayout("border")
     }
+
+    // MARK: Edit end
 
     var body: some View {
         VStack {

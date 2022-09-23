@@ -16,16 +16,16 @@ iOS 16.0 or macOS 13.0 (requires the `Layout` protocol).
 1.  Edit the `subject: some View` property in `ContentView`. It should contain
     the view tree you want to inspect.
     
-2.  Add `.debugLayout()` to each view in the view tree whose layout algorithm
-    you want to inspect. 
+2.  Add `.debugLayout()` at each point in the view tree where you want to inspect
+    the layout algorithm (what sizes are being proposed and returned). 
         
-    Example of a `subject` property with a few `debugLayout` inspection points:
+    Example of a `subject` property with a few inspection points:
    
     ```swift
     var subject: some View {
         Text("Hello world")
             .debugLayout("Text")
-            .padding()
+            .padding(10)
             .debugLayout("padding")
             .background {
                 Color.yellow
@@ -41,6 +41,7 @@ iOS 16.0 or macOS 13.0 (requires the `Layout` protocol).
     - The table on the bottom displays the sizes that are being proposed at each
       inspection point in the subject view ("Proposal", and the resulting view 
       sizes ("Response").
+    - You can tap/click items in the grid to highlight the respective view.
     - You can use the sliders to modify the size proposed to the subject view.
     - Some views cache certain layout information. Press "Reset layout cache"
       after modifying the sliders to reset the caches.
