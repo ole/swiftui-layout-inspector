@@ -9,15 +9,8 @@ struct ContentView: View {
     var subject: some View {
         Text("Hello")
             .debugLayout("Text")
-            .aspectRatio(1, contentMode: .fit)
-            .debugLayout("aspectRatio")
             .padding()
             .debugLayout("padding")
-            .background {
-                Color.yellow
-                    .debugLayout("yellow")
-            }
-            .debugLayout("background")
     }
 
     var body: some View {
