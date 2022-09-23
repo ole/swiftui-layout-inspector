@@ -7,7 +7,7 @@ struct ContentView: View {
     @State private var generation: Int = 0
 
     var subject: some View {
-        Text("Hello")
+        Text("Hello world")
             .debugLayout("Text")
             .padding()
             .debugLayout("padding")
