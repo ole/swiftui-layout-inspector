@@ -7,6 +7,8 @@ Based on: [objc.io, Swift Talk episode 318, Inspecting SwiftUI's Layout Process 
 Inspect the layout algorithm of SwiftUI views, i.e. what sizes views propose to
 their children and what sizes they return to their parents.
 
+![Layout Inspector screenshot on iPhone simulator](assets/LayoutInspector-screenshot.png)
+
 ## Requirements
 
 iOS 16.0 or macOS 13.0 (requires the `Layout` protocol).
