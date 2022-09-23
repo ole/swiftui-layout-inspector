@@ -11,6 +11,11 @@ struct ContentView: View {
             .debugLayout("Text")
             .padding()
             .debugLayout("padding")
+            .background {
+                Color.yellow
+                    .debugLayout("yellow")
+            }
+            .debugLayout("background")
     }
 
     var body: some View {
