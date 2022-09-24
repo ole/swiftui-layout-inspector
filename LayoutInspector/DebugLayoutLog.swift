@@ -1,8 +1,8 @@
 import SwiftUI
 
-func logLayoutStep(_ label: String, step: LogItem.Step) {
+func logLayoutStep(_ label: String, step: LogItem.Step, indent: Int) {
     DispatchQueue.main.async {
-        // Coalesce layout steps if the response follow immediately after the proposal
+        // Coalesce layout steps if the response follows immediately after the proposal
         // for the same view.
         //
         // In this case, proposal and response can be shown in a single row in the log.
@@ -15,7 +15,7 @@ func logLayoutStep(_ label: String, step: LogItem.Step) {
             lastLogItem.step = .proposalAndResponse(proposal: proposal, response: response)
             LogStore.shared.log.append(lastLogItem)
         } else {
-            LogStore.shared.log.append(.init(label: label, step: step))
+            LogStore.shared.log.append(.init(label: label, step: step, indent: indent))
         }
     }
 }
@@ -53,6 +53,7 @@ struct LogItem: Identifiable {
     var id: UUID = .init()
     var label: String
     var step: Step
+    var indent: Int
 
     var proposal: ProposedViewSize? {
         switch step {
@@ -86,6 +87,9 @@ struct DebugLayoutLogView: View {
     @Binding var selection: String?
     @ObservedObject var logStore: LogStore
 
+    private static let tableRowHorizontalPadding: CGFloat = 8
+    private static let tableRowVerticalPadding: CGFloat = 4
+
     init(selection: Binding<String?>? = nil, logStore: LogStore = LogStore.shared) {
         if let binding = selection {
             self._selection = binding
@@ -99,27 +103,33 @@ struct DebugLayoutLogView: View {
     var body: some View {
         ScrollView(.vertical) {
             Grid(alignment: .leadingFirstTextBaseline, horizontalSpacing: 0, verticalSpacing: 0) {
+                // Table header row
                 GridRow {
                     Text("View")
                     Text("Proposal")
                     Text("Response")
                 }
                 .font(.headline)
-                .padding(.vertical, 4)
-                .padding(.horizontal, 8)
+                .padding(.vertical, Self.tableRowVerticalPadding)
+                .padding(.horizontal, Self.tableRowHorizontalPadding)
 
+                // Table header separator line
                 Rectangle().fill(.secondary)
                     .frame(height: 1)
                     .gridCellUnsizedAxes(.horizontal)
-                    .padding(.vertical, 4)
-                    .padding(.horizontal, 8)
+                    .padding(.vertical, Self.tableRowVerticalPadding)
+                    .padding(.horizontal, Self.tableRowHorizontalPadding)
 
+                // Table rows
                 ForEach(logStore.log) { item in
                     let isSelected = selection == item.label
                     GridRow {
-                        Text(item.label)
-                            .font(.body)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                        HStack(spacing: 0) {
+                            indentation(level: item.indent)
+                            Text(item.label)
+                                .font(.body)
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
 
                         Text(item.proposal?.pretty ?? "…")
                             .monospacedDigit()
@@ -132,8 +142,8 @@ struct DebugLayoutLogView: View {
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                     }
                     .font(.callout)
-                    .padding(.vertical, 4)
-                    .padding(.horizontal, 8)
+                    .padding(.vertical, Self.tableRowVerticalPadding)
+                    .padding(.horizontal, Self.tableRowHorizontalPadding)
                     .foregroundColor(isSelected ? .white : nil)
                     .background(isSelected ? Color.accentColor : .clear)
                     .contentShape(Rectangle())
@@ -145,5 +155,19 @@ struct DebugLayoutLogView: View {
             .padding(.vertical, 8)
         }
         .background(Color(uiColor: .secondarySystemBackground))
+    }
+
+    private func indentation(level: Int) -> some View {
+        ForEach(0 ..< level, id: \.self) { _ in
+            Color.clear
+                .frame(width: 16)
+                .overlay(alignment: .leading) {
+                    Rectangle()
+                        .frame(width: 1)
+                        .padding(.leading, 4)
+                        // Compensate for cell padding, we want continuous vertical lines.
+                        .padding(.vertical, -Self.tableRowVerticalPadding)
+                }
+        }
     }
 }

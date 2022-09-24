@@ -15,8 +15,8 @@ extension View {
     }
 
     /// Monitor the layout proposals and responses for this view and add them to the log.
-    func debugLayout(_ label: String) -> some View {
-        DebugLayout(label: label) {
+    func debugLayout(_ label: String, indent: Int = 0) -> some View {
+        DebugLayout(label: label, indent: indent) {
             self
         }
         .modifier(DebugLayoutSelectionHighlight(viewID: label))
@@ -26,12 +26,13 @@ extension View {
 /// A custom layout that adds the layout proposals and responses for a view to a log for display.
 struct DebugLayout: Layout {
     var label: String
+    var indent: Int
 
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
         assert(subviews.count == 1)
-        logLayoutStep(label, step: .proposal(proposal))
+        logLayoutStep(label, step: .proposal(proposal), indent: indent)
         let response = subviews[0].sizeThatFits(proposal)
-        logLayoutStep(label, step: .response(response))
+        logLayoutStep(label, step: .response(response), indent: indent)
         return response
     }
 
