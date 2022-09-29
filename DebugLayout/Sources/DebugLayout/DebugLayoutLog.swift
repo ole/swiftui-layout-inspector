@@ -55,8 +55,8 @@ struct ClearDebugLayoutLog: Layout {
     }
 }
 
-final class LogStore: ObservableObject {
-    static let shared: LogStore = .init()
+public final class LogStore: ObservableObject {
+    public static let shared: LogStore = .init()
 
     @Published var log: [LogItem] = []
 }
@@ -101,14 +101,14 @@ extension EnvironmentValues {
     }
 }
 
-struct DebugLayoutLogView: View {
+public struct DebugLayoutLogView: View {
     @Binding var selection: String?
     @ObservedObject var logStore: LogStore
 
     private static let tableRowHorizontalPadding: CGFloat = 8
     private static let tableRowVerticalPadding: CGFloat = 4
 
-    init(selection: Binding<String?>? = nil, logStore: LogStore = LogStore.shared) {
+    public init(selection: Binding<String?>? = nil, logStore: LogStore = LogStore.shared) {
         if let binding = selection {
             self._selection = binding
         } else {
@@ -118,7 +118,7 @@ struct DebugLayoutLogView: View {
         self._logStore = ObservedObject(wrappedValue: logStore)
     }
 
-    var body: some View {
+    public var body: some View {
         ScrollView(.vertical) {
             Grid(alignment: .leadingFirstTextBaseline, horizontalSpacing: 0, verticalSpacing: 0) {
                 // Table header row

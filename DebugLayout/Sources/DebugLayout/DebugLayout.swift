@@ -7,7 +7,7 @@ extension View {
     /// Start debugging the layout algorithm for this subtree.
     ///
     /// This clears the debug layout log.
-    func startDebugLayout(selection: String? = nil) -> some View {
+    public func startDebugLayout(selection: String? = nil) -> some View {
         ClearDebugLayoutLog {
             self
         }
@@ -15,7 +15,7 @@ extension View {
     }
 
     /// Monitor the layout proposals and responses for this view and add them to the log.
-    func debugLayout(_ label: String) -> some View {
+    public func debugLayout(_ label: String) -> some View {
         DebugLayout(label: label) {
             self
         }
