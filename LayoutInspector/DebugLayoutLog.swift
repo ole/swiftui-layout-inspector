@@ -1,21 +1,39 @@
 import SwiftUI
 
-func logLayoutStep(_ label: String, step: LogItem.Step, indent: Int) {
+func logLayoutStep(_ label: String, step: LogItem.Step) {
     DispatchQueue.main.async {
-        // Coalesce layout steps if the response follows immediately after the proposal
-        // for the same view.
-        //
-        // In this case, proposal and response can be shown in a single row in the log.
-        if var lastLogItem = LogStore.shared.log.last,
-           lastLogItem.label == label,
-           case .proposal(let proposal) = lastLogItem.step,
-           case .response(let response) = step
-        {
+        guard let prevEntry = LogStore.shared.log.last else {
+            // First log entry → start at indent 0.
+            LogStore.shared.log.append(LogItem(label: label, step: step, indent: 0))
+            return
+        }
+
+        var newEntry = LogItem(label: label, step: step, indent: prevEntry.indent)
+        let isSameView = prevEntry.label == label
+        switch (isSameView, prevEntry.step, step) {
+        case (true, .proposal(let prop), .response(let resp)):
+            // Response follows immediately after proposal for the same view.
+            // → We want to display them in a single row.
+            // → Coalesce both layout steps.
             LogStore.shared.log.removeLast()
-            lastLogItem.step = .proposalAndResponse(proposal: proposal, response: response)
-            LogStore.shared.log.append(lastLogItem)
-        } else {
-            LogStore.shared.log.append(.init(label: label, step: step, indent: indent))
+            newEntry = prevEntry
+            newEntry.step = .proposalAndResponse(proposal: prop, response: resp)
+            LogStore.shared.log.append(newEntry)
+
+        case (_, .proposal, .proposal):
+            // A proposal follows a proposal → nested view → increment indent.
+            newEntry.indent += 1
+            LogStore.shared.log.append(newEntry)
+
+        case (_, .response, .response),
+            (_, .proposalAndResponse, .response):
+            // A response follows a response → last child returns to parent → decrement indent.
+            newEntry.indent -= 1
+            LogStore.shared.log.append(newEntry)
+
+        default:
+            // Keep current indentation.
+            LogStore.shared.log.append(newEntry)
         }
     }
 }
