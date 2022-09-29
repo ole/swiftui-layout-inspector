@@ -1,14 +1,14 @@
 import SwiftUI
 
-func logLayoutStep(_ label: String, step: LogItem.Step) {
+func logLayoutStep(_ label: String, step: LogEntry.Step) {
     DispatchQueue.main.async {
         guard let prevEntry = LogStore.shared.log.last else {
             // First log entry → start at indent 0.
-            LogStore.shared.log.append(LogItem(label: label, step: step, indent: 0))
+            LogStore.shared.log.append(LogEntry(label: label, step: step, indent: 0))
             return
         }
 
-        var newEntry = LogItem(label: label, step: step, indent: prevEntry.indent)
+        var newEntry = LogEntry(label: label, step: step, indent: prevEntry.indent)
         let isSameView = prevEntry.label == label
         switch (isSameView, prevEntry.step, step) {
         case (true, .proposal(let prop), .response(let resp)):
@@ -58,10 +58,10 @@ struct ClearDebugLayoutLog: Layout {
 public final class LogStore: ObservableObject {
     public static let shared: LogStore = .init()
 
-    @Published var log: [LogItem] = []
+    @Published var log: [LogEntry] = []
 }
 
-struct LogItem: Identifiable {
+struct LogEntry: Identifiable {
     enum Step {
         case proposal(ProposedViewSize)
         case response(CGSize)
