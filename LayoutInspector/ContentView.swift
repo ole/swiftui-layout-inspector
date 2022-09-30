@@ -51,13 +51,16 @@ struct Inspector<Subject: View>: View {
     @State private var selectedView: String? = nil
     @State private var generation: Int = 0
 
+    private var roundedWidth: CGFloat { width.rounded() }
+    private var roundedHeight: CGFloat { height.rounded() }
+
     var body: some View {
         VStack {
             VStack {
                 subject
                     .startDebugLayout(selection: selectedView)
                     .id(generation)
-                    .frame(width: width, height: height)
+                    .frame(width: roundedWidth, height: roundedHeight)
                     .overlay {
                         Rectangle()
                             .strokeBorder(style: StrokeStyle(dash: [5]))
@@ -67,23 +70,23 @@ struct Inspector<Subject: View>: View {
                 VStack {
                     LabeledContent {
                         HStack {
-                            Slider(value: $width, in: 0...500, step: 1)
+                            Slider(value: $width, in: 0...500)
                             Stepper("Width", value: $width)
                         }
                         .labelsHidden()
                     } label: {
-                        Text("W \(width, format: .number.precision(.fractionLength(0)))")
+                        Text("W \(roundedWidth, format: .number.precision(.fractionLength(0)))")
                             .monospacedDigit()
                     }
 
                     LabeledContent {
                         HStack {
-                            Slider(value: $height, in: 0...500, step: 1)
+                            Slider(value: $height, in: 0...500)
                             Stepper("Height", value: $height)
                         }
                         .labelsHidden()
                     } label: {
-                        Text("H \(height, format: .number.precision(.fractionLength(0)))")
+                        Text("H \(roundedHeight, format: .number.precision(.fractionLength(0)))")
                             .monospacedDigit()
                     }
 
