@@ -2,17 +2,25 @@ import SwiftUI
 import DebugLayout
 
 struct ContentView: View {
-    var suggestedExamplePadding: some View {
+    var body: some View {
+        Inspector {
+            /// The view tree whose layout you want to inspect. Add `.debugLayout()` calls at
+            /// each point where you want to inspect the layout algorithm, i.e. what sizes are
+            /// being proposed and returned. We call these **inspection points**.
+            hStackExample
+        }
+    }
+
+    var paddingExample: some View {
         Text("Hello world")
             .debugLayout("Text")
             .padding(10)
             .debugLayout("padding")
             .border(Color.green)
             .debugLayout("border")
-
     }
 
-    var hstack: some View {
+    var hStackExample: some View {
         HStack(spacing: 10) {
             Rectangle().fill(.green)
                 .debugLayout("green")
@@ -24,7 +32,7 @@ struct ContentView: View {
         .debugLayout("HStack")
     }
 
-    var fixedSize: some View {
+    var fixedSizeExample: some View {
           Text("Lorem ipsum dolor sit amet")
               .debugLayout("Text")
               .fixedSize()
@@ -32,31 +40,16 @@ struct ContentView: View {
               .frame(width: 100)
               .debugLayout("frame")
               .border(Color.green)
-      }
-
-    var body: some View {
-        Inspector {
-            hstack
-        }
     }
 }
 
 struct Inspector<Subject: View>: View {
-
-    /// The view tree whose layout you want to inspect. Add `.debugLayout()` calls at
-    /// each point where you want to inspect the layout algorithm, i.e. what sizes are
-    /// being proposed and returned. We call these **inspection points**.
     @ViewBuilder var subject: Subject
-
-    init(@ViewBuilder subject: () -> Subject) {
-        self.subject = subject()
-    }
 
     @State private var width: CGFloat = 300
     @State private var height: CGFloat = 100
     @State private var selectedView: String? = nil
     @State private var generation: Int = 0
-
 
     var body: some View {
         VStack {
