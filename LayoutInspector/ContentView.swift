@@ -67,7 +67,7 @@ struct Inspector<Subject: View>: View {
                 VStack {
                     LabeledContent {
                         HStack {
-                            Slider(value: $width, in: 50...500, step: 1)
+                            Slider(value: $width, in: 0...500, step: 1)
                             Stepper("Width", value: $width)
                         }
                         .labelsHidden()
@@ -78,7 +78,7 @@ struct Inspector<Subject: View>: View {
 
                     LabeledContent {
                         HStack {
-                            Slider(value: $height, in: 50...500, step: 1)
+                            Slider(value: $height, in: 0...500, step: 1)
                             Stepper("Height", value: $height)
                         }
                         .labelsHidden()
