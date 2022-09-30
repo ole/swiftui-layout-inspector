@@ -172,7 +172,13 @@ public struct DebugLayoutLogView: View {
             }
             .padding(.vertical, 8)
         }
-        .background(Color(uiColor: .secondarySystemBackground))
+        .background {
+            #if macOS
+            Color(white: 0.8)
+            #else
+            Color(uiColor: .secondarySystemBackground)
+            #endif
+        }
     }
 
     private func indentation(level: Int) -> some View {
