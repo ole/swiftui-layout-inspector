@@ -45,6 +45,7 @@ struct ClearDebugLayoutLog: Layout {
         assert(subviews.count == 1)
         DispatchQueue.main.async {
             LogStore.shared.log.removeAll()
+            LogStore.shared.viewLabels.removeAll()
         }
         return subviews[0].sizeThatFits(proposal)
     }
@@ -59,6 +60,17 @@ public final class LogStore: ObservableObject {
     public static let shared: LogStore = .init()
 
     @Published var log: [LogEntry] = []
+    var viewLabels: Set<String> = []
+
+    func registerViewLabelAndWarnIfNotUnique(_ label: String, file: StaticString, line: UInt) {
+        DispatchQueue.main.async {
+            if self.viewLabels.contains(label) {
+                let message: StaticString = "Duplicate view label '%s' detected. Use unique labels in debugLayout() calls"
+                runtimeWarning(message, [label], file: file, line: line)
+            }
+            self.viewLabels.insert(label)
+        }
+    }
 }
 
 struct LogEntry: Identifiable {
