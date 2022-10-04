@@ -185,7 +185,7 @@ public struct DebugLayoutLogView: View {
             .padding(.vertical, 8)
         }
         .background {
-            #if macOS
+            #if os(macOS)
             Color(white: 0.8)
             #else
             Color(uiColor: .secondarySystemBackground)
