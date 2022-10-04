@@ -15,9 +15,16 @@ extension View {
     }
 
     /// Monitor the layout proposals and responses for this view and add them to the log.
-    public func debugLayout(_ label: String) -> some View {
+    public func debugLayout(
+        _ label: String,
+        file: StaticString = #fileID,
+        line: UInt = #line
+    ) -> some View {
         DebugLayout(label: label) {
             self
+        }
+        .onAppear {
+            LogStore.shared.registerViewLabelAndWarnIfNotUnique(label, file: file, line: line)
         }
         .modifier(DebugLayoutSelectionHighlight(viewID: label))
     }
