@@ -3,10 +3,11 @@
 //
 // Based on: Point-Free, Unobtrusive runtime warnings for libraries (2022-01-03)
 // https://www.pointfree.co/blog/posts/70-unobtrusive-runtime-warnings-for-libraries
+//
+// Slightly modified by Ole Begemann
 
 #if DEBUG
     import os
-    import XCTestDynamicOverlay
 
     // NB: Xcode runtime warnings offer a much better experience than traditional assertions and
     //     breakpoints, but Apple provides no means of creating custom runtime warnings ourselves.
@@ -28,7 +29,7 @@
             }
             return UnsafeMutableRawPointer(mutating: #dsohandle)
         }(),
-        log: OSLog(subsystem: "com.apple.runtime-issues", category: "ComposableArchitecture")
+        log: OSLog(subsystem: "com.apple.runtime-issues", category: "DebugLayout")
     )
 #endif
 
@@ -42,17 +43,9 @@ func runtimeWarning(
 ) {
     #if DEBUG
         let message = message()
-        if _XCTIsTesting {
-            if let file = file, let line = line {
-                XCTFail(String(format: "\(message)", arguments: args()), file: file, line: line)
-            } else {
-                XCTFail(String(format: "\(message)", arguments: args()))
-            }
-        } else {
-            unsafeBitCast(
-                os_log as (OSLogType, UnsafeRawPointer, OSLog, StaticString, CVarArg...) -> Void,
-                to: ((OSLogType, UnsafeRawPointer, OSLog, StaticString, [CVarArg]) -> Void).self
-            )(.fault, rw.dso, rw.log, message, args())
-        }
+        unsafeBitCast(
+            os_log as (OSLogType, UnsafeRawPointer, OSLog, StaticString, CVarArg...) -> Void,
+            to: ((OSLogType, UnsafeRawPointer, OSLog, StaticString, [CVarArg]) -> Void).self
+        )(.fault, rw.dso, rw.log, message, args())
     #endif
 }
