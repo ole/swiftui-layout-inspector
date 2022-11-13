@@ -24,9 +24,5 @@ let package = Package(
             name: "DebugLayout",
             dependencies: []
         ),
-        .testTarget(
-            name: "DebugLayoutTests",
-            dependencies: ["DebugLayout"]
-        ),
     ]
 )
