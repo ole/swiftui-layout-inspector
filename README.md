@@ -1,6 +1,4 @@
-# SwiftUI Layout Inspector
-
-By [Ole Begemann](https://oleb.net/)
+# [SwiftUI Layout Inspector](https://github.com/ole/SwiftUI-LayoutInspector)
 
 A Swift library (and demo app) for learning how the SwiftUI layout system works,
 and for debugging your own layout code. Inspect the layout behavior of SwiftUI
@@ -26,9 +24,9 @@ At its core, SwiftUI’s layout algorithm is wonderfully simple:
 4.  The parent view positions its children.
 
 Complex layouts in SwiftUI can be achieved by composing built-in views and view
-modifiers. The tricky part about understanding the SwiftUI layout system is
-learning the layout behavior of the built-in views. This package aims to help
-you learn.
+modifiers. The tricky part about understanding the layout system is learning the
+layout behavior of the built-in views, many of which are poorly documented (as
+of November 2022). This package aims to help you learn.
 
 ## Components
 
