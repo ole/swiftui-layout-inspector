@@ -62,7 +62,7 @@ struct ClearDebugLayoutLog: Layout {
 public final class LogStore: ObservableObject {
     public static let shared: LogStore = .init()
 
-    @Published var log: [LogEntry] = []
+    @Published public var log: [LogEntry] = []
     var viewLabels: Set<String> = []
 
     func registerViewLabelAndWarnIfNotUnique(_ label: String, file: StaticString, line: UInt) {
@@ -77,36 +77,6 @@ public final class LogStore: ObservableObject {
 }
 
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-struct LogEntry: Identifiable {
-    enum Step {
-        case proposal(ProposedViewSize)
-        case response(CGSize)
-        case proposalAndResponse(proposal: ProposedViewSize, response: CGSize)
-    }
-
-    var id: UUID = .init()
-    var label: String
-    var step: Step
-    var indent: Int
-
-    var proposal: ProposedViewSize? {
-        switch step {
-        case .proposal(let p): return p
-        case .response(_): return nil
-        case .proposalAndResponse(proposal: let p, response: _): return p
-        }
-    }
-
-    var response: CGSize? {
-        switch step {
-        case .proposal(_): return nil
-        case .response(let r): return r
-        case .proposalAndResponse(proposal: _, response: let r): return r
-        }
-    }
-}
-
-@available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 struct DebugLayoutSelectedViewID: EnvironmentKey {
     static var defaultValue: String? { nil }
 }
@@ -116,101 +86,5 @@ extension EnvironmentValues {
     var debugLayoutSelectedViewID: String? {
         get { self[DebugLayoutSelectedViewID.self] }
         set { self[DebugLayoutSelectedViewID.self] = newValue }
-    }
-}
-
-@available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-public struct DebugLayoutLogView: View {
-    @Binding var selection: String?
-    @ObservedObject var logStore: LogStore
-
-    private static let tableRowHorizontalPadding: CGFloat = 8
-    private static let tableRowVerticalPadding: CGFloat = 4
-
-    public init(selection: Binding<String?>? = nil, logStore: LogStore = LogStore.shared) {
-        if let binding = selection {
-            self._selection = binding
-        } else {
-            var nirvana: String? = nil
-            self._selection = Binding(get: { nirvana }, set: { nirvana = $0 })
-        }
-        self._logStore = ObservedObject(wrappedValue: logStore)
-    }
-
-    public var body: some View {
-        ScrollView(.vertical) {
-            Grid(alignment: .leadingFirstTextBaseline, horizontalSpacing: 0, verticalSpacing: 0) {
-                // Table header row
-                GridRow {
-                    Text("View")
-                    Text("Proposal")
-                    Text("Response")
-                }
-                .font(.headline)
-                .padding(.vertical, Self.tableRowVerticalPadding)
-                .padding(.horizontal, Self.tableRowHorizontalPadding)
-
-                // Table header separator line
-                Rectangle().fill(.secondary)
-                    .frame(height: 1)
-                    .gridCellUnsizedAxes(.horizontal)
-                    .padding(.vertical, Self.tableRowVerticalPadding)
-                    .padding(.horizontal, Self.tableRowHorizontalPadding)
-
-                // Table rows
-                ForEach(logStore.log) { item in
-                    let isSelected = selection == item.label
-                    GridRow {
-                        HStack(spacing: 0) {
-                            indentation(level: item.indent)
-                            Text(item.label)
-                                .font(.body)
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-
-                        Text(item.proposal?.pretty ?? "…")
-                            .monospacedDigit()
-                            .fixedSize()
-                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-
-                        Text(item.response?.pretty ?? "…")
-                            .monospacedDigit()
-                            .fixedSize()
-                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-                    }
-                    .font(.callout)
-                    .padding(.vertical, Self.tableRowVerticalPadding)
-                    .padding(.horizontal, Self.tableRowHorizontalPadding)
-                    .foregroundColor(isSelected ? .white : nil)
-                    .background(isSelected ? Color.accentColor : .clear)
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        selection = isSelected ? nil : item.label
-                    }
-                }
-            }
-            .padding(.vertical, 8)
-        }
-        .background {
-            #if os(macOS)
-            Color(white: 0.8)
-            #else
-            Color(uiColor: .secondarySystemBackground)
-            #endif
-        }
-    }
-
-    private func indentation(level: Int) -> some View {
-        ForEach(0 ..< level, id: \.self) { _ in
-            Color.clear
-                .frame(width: 16)
-                .overlay(alignment: .leading) {
-                    Rectangle()
-                        .frame(width: 1)
-                        .padding(.leading, 4)
-                        // Compensate for cell padding, we want continuous vertical lines.
-                        .padding(.vertical, -Self.tableRowVerticalPadding)
-                }
-        }
     }
 }

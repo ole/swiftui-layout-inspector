@@ -50,6 +50,7 @@ struct Inspector<Subject: View>: View {
     @State private var height: CGFloat = 100
     @State private var selectedView: String? = nil
     @State private var generation: Int = 0
+    @ObservedObject private var logStore = LogStore.shared
 
     private var roundedWidth: CGFloat { width.rounded() }
     private var roundedHeight: CGFloat { height.rounded() }
@@ -98,7 +99,11 @@ struct Inspector<Subject: View>: View {
             }
             .padding()
 
-            DebugLayoutLogView(selection: $selectedView)
+            #if os(macOS)
+            LogEntriesTable(logEntries: logStore.log, highlight: $selectedView)
+            #else
+            LogEntriesGrid(logEntries: logStore.log, highlight: $selectedView)
+            #endif
         }
     }
 }
