@@ -1,5 +1,5 @@
+import LayoutInspector
 import SwiftUI
-import DebugLayout
 
 struct ContentView: View {
     var body: some View {

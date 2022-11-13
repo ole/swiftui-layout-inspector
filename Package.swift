@@ -3,13 +3,13 @@
 import PackageDescription
 
 let package = Package(
-    name: "DebugLayout",
+    name: "LayoutInspector",
     platforms: [.macOS(.v13), .iOS(.v16), .tvOS(.v16), .watchOS(.v9)],
     products: [
-        .library(name: "DebugLayout", targets: ["DebugLayout"]),
+        .library(name: "LayoutInspector", targets: ["LayoutInspector"]),
     ],
     dependencies: [],
     targets: [
-        .target(name: "DebugLayout", dependencies: []),
+        .target(name: "LayoutInspector", dependencies: []),
     ]
 )

@@ -10,7 +10,7 @@
 		5D2245F028D8FDB400E84C7D /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2245EF28D8FDB400E84C7D /* App.swift */; };
 		5D2245F228D8FDB400E84C7D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2245F128D8FDB400E84C7D /* ContentView.swift */; };
 		5D2245F428D8FDB500E84C7D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D2245F328D8FDB500E84C7D /* Assets.xcassets */; };
-		5D5B04922921290F00758B21 /* DebugLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 5D5B04912921290F00758B21 /* DebugLayout */; };
+		5D8410B529212EF600117429 /* LayoutInspector in Frameworks */ = {isa = PBXBuildFile; productRef = 5D8410B429212EF600117429 /* LayoutInspector */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,7 +28,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5D5B04922921290F00758B21 /* DebugLayout in Frameworks */,
+				5D8410B529212EF600117429 /* LayoutInspector in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -45,6 +45,7 @@
 				5D2245F328D8FDB500E84C7D /* Assets.xcassets */,
 				5D2245F528D8FDB500E84C7D /* Entitlements.entitlements */,
 				5D2245ED28D8FDB400E84C7D /* Products */,
+				5D8410B329212EF600117429 /* Frameworks */,
 			);
 			indentWidth = 4;
 			sourceTree = "<group>";
@@ -56,6 +57,13 @@
 				5D2245EC28D8FDB400E84C7D /* LayoutInspectorDemo.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		5D8410B329212EF600117429 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -75,7 +83,7 @@
 			);
 			name = LayoutInspectorDemo;
 			packageProductDependencies = (
-				5D5B04912921290F00758B21 /* DebugLayout */,
+				5D8410B429212EF600117429 /* LayoutInspector */,
 			);
 			productName = LayoutInspector;
 			productReference = 5D2245EC28D8FDB400E84C7D /* LayoutInspectorDemo.app */;
@@ -349,9 +357,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		5D5B04912921290F00758B21 /* DebugLayout */ = {
+		5D8410B429212EF600117429 /* LayoutInspector */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = DebugLayout;
+			productName = LayoutInspector;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
