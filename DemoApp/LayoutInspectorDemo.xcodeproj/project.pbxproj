@@ -10,17 +10,15 @@
 		5D2245F028D8FDB400E84C7D /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2245EF28D8FDB400E84C7D /* App.swift */; };
 		5D2245F228D8FDB400E84C7D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2245F128D8FDB400E84C7D /* ContentView.swift */; };
 		5D2245F428D8FDB500E84C7D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D2245F328D8FDB500E84C7D /* Assets.xcassets */; };
-		5D2245F828D8FDB500E84C7D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D2245F728D8FDB500E84C7D /* Preview Assets.xcassets */; };
 		5D5B04922921290F00758B21 /* DebugLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 5D5B04912921290F00758B21 /* DebugLayout */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		5D2245EC28D8FDB400E84C7D /* LayoutInspector.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LayoutInspector.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D2245EC28D8FDB400E84C7D /* LayoutInspectorDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LayoutInspectorDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D2245EF28D8FDB400E84C7D /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		5D2245F128D8FDB400E84C7D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		5D2245F328D8FDB500E84C7D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		5D2245F528D8FDB500E84C7D /* LayoutInspector.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LayoutInspector.entitlements; sourceTree = "<group>"; };
-		5D2245F728D8FDB500E84C7D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		5D2245F528D8FDB500E84C7D /* Entitlements.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Entitlements.entitlements; sourceTree = "<group>"; };
 		5D5B048F2921290A00758B21 /* SwiftUI-LayoutInspector */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "SwiftUI-LayoutInspector"; path = ..; sourceTree = "<group>"; };
 		5DB6BE4F28DE4D4E00280F5E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -40,9 +38,12 @@
 		5D2245E328D8FDB400E84C7D = {
 			isa = PBXGroup;
 			children = (
-				5DB6BE4F28DE4D4E00280F5E /* README.md */,
-				5D2245EE28D8FDB400E84C7D /* LayoutInspector */,
 				5D5B048F2921290A00758B21 /* SwiftUI-LayoutInspector */,
+				5DB6BE4F28DE4D4E00280F5E /* README.md */,
+				5D2245EF28D8FDB400E84C7D /* App.swift */,
+				5D2245F128D8FDB400E84C7D /* ContentView.swift */,
+				5D2245F328D8FDB500E84C7D /* Assets.xcassets */,
+				5D2245F528D8FDB500E84C7D /* Entitlements.entitlements */,
 				5D2245ED28D8FDB400E84C7D /* Products */,
 			);
 			indentWidth = 4;
@@ -52,37 +53,17 @@
 		5D2245ED28D8FDB400E84C7D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5D2245EC28D8FDB400E84C7D /* LayoutInspector.app */,
+				5D2245EC28D8FDB400E84C7D /* LayoutInspectorDemo.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		5D2245EE28D8FDB400E84C7D /* LayoutInspector */ = {
-			isa = PBXGroup;
-			children = (
-				5D2245EF28D8FDB400E84C7D /* App.swift */,
-				5D2245F128D8FDB400E84C7D /* ContentView.swift */,
-				5D2245F328D8FDB500E84C7D /* Assets.xcassets */,
-				5D2245F528D8FDB500E84C7D /* LayoutInspector.entitlements */,
-				5D2245F628D8FDB500E84C7D /* Preview Content */,
-			);
-			path = LayoutInspector;
-			sourceTree = "<group>";
-		};
-		5D2245F628D8FDB500E84C7D /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				5D2245F728D8FDB500E84C7D /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5D2245EB28D8FDB400E84C7D /* LayoutInspector */ = {
+		5D2245EB28D8FDB400E84C7D /* LayoutInspectorDemo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5D2245FB28D8FDB500E84C7D /* Build configuration list for PBXNativeTarget "LayoutInspector" */;
+			buildConfigurationList = 5D2245FB28D8FDB500E84C7D /* Build configuration list for PBXNativeTarget "LayoutInspectorDemo" */;
 			buildPhases = (
 				5D2245E828D8FDB400E84C7D /* Sources */,
 				5D2245E928D8FDB400E84C7D /* Frameworks */,
@@ -92,12 +73,12 @@
 			);
 			dependencies = (
 			);
-			name = LayoutInspector;
+			name = LayoutInspectorDemo;
 			packageProductDependencies = (
 				5D5B04912921290F00758B21 /* DebugLayout */,
 			);
 			productName = LayoutInspector;
-			productReference = 5D2245EC28D8FDB400E84C7D /* LayoutInspector.app */;
+			productReference = 5D2245EC28D8FDB400E84C7D /* LayoutInspectorDemo.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -115,7 +96,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 5D2245E728D8FDB400E84C7D /* Build configuration list for PBXProject "LayoutInspector" */;
+			buildConfigurationList = 5D2245E728D8FDB400E84C7D /* Build configuration list for PBXProject "LayoutInspectorDemo" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -128,7 +109,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5D2245EB28D8FDB400E84C7D /* LayoutInspector */,
+				5D2245EB28D8FDB400E84C7D /* LayoutInspectorDemo */,
 			);
 		};
 /* End PBXProject section */
@@ -138,7 +119,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5D2245F828D8FDB500E84C7D /* Preview Assets.xcassets in Resources */,
 				5D2245F428D8FDB500E84C7D /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -274,11 +254,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = LayoutInspector/LayoutInspector.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Entitlements.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_ASSET_PATHS = "\"LayoutInspector/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -298,7 +277,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = net.oleb.LayoutInspector;
+				PRODUCT_BUNDLE_IDENTIFIER = net.oleb.LayoutInspectorDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -313,11 +292,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = LayoutInspector/LayoutInspector.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Entitlements.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_ASSET_PATHS = "\"LayoutInspector/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -337,7 +315,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = net.oleb.LayoutInspector;
+				PRODUCT_BUNDLE_IDENTIFIER = net.oleb.LayoutInspectorDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -350,7 +328,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5D2245E728D8FDB400E84C7D /* Build configuration list for PBXProject "LayoutInspector" */ = {
+		5D2245E728D8FDB400E84C7D /* Build configuration list for PBXProject "LayoutInspectorDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5D2245F928D8FDB500E84C7D /* Debug */,
@@ -359,7 +337,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5D2245FB28D8FDB500E84C7D /* Build configuration list for PBXNativeTarget "LayoutInspector" */ = {
+		5D2245FB28D8FDB500E84C7D /* Build configuration list for PBXNativeTarget "LayoutInspectorDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5D2245FC28D8FDB500E84C7D /* Debug */,

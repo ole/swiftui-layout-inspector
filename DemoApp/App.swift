@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct LayoutInspectorApp: App {
+struct LayoutInspectorDemoApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
