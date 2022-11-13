@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 func logLayoutStep(_ label: String, step: LogEntry.Step) {
     DispatchQueue.main.async {
         guard let prevEntry = LogStore.shared.log.last else {
@@ -40,6 +41,7 @@ func logLayoutStep(_ label: String, step: LogEntry.Step) {
 
 /// A custom layout that clears the DebugLayout log
 /// at the point where it's placed in the view tree.
+@available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 struct ClearDebugLayoutLog: Layout {
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
         assert(subviews.count == 1)
@@ -56,6 +58,7 @@ struct ClearDebugLayoutLog: Layout {
     }
 }
 
+@available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 public final class LogStore: ObservableObject {
     public static let shared: LogStore = .init()
 
@@ -73,6 +76,7 @@ public final class LogStore: ObservableObject {
     }
 }
 
+@available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 struct LogEntry: Identifiable {
     enum Step {
         case proposal(ProposedViewSize)
@@ -102,10 +106,12 @@ struct LogEntry: Identifiable {
     }
 }
 
+@available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 struct DebugLayoutSelectedViewID: EnvironmentKey {
     static var defaultValue: String? { nil }
 }
 
+@available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 extension EnvironmentValues {
     var debugLayoutSelectedViewID: String? {
         get { self[DebugLayoutSelectedViewID.self] }
@@ -113,6 +119,7 @@ extension EnvironmentValues {
     }
 }
 
+@available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 public struct DebugLayoutLogView: View {
     @Binding var selection: String?
     @ObservedObject var logStore: LogStore
