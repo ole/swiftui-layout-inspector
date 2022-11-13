@@ -1,5 +1,14 @@
 // swift-tools-version: 5.7
 
+// SwiftUI Layout Inspector
+//
+// A tool for learning how the SwiftUI layout system works,
+// and for debugging your own layout code.
+//
+// https://github.com/ole/SwiftUI-LayoutInspector/
+//
+// By Ole Begemann, https://oleb.net/
+
 import PackageDescription
 
 let package = Package(
@@ -11,7 +20,10 @@ let package = Package(
     // `@available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)` or higher.
     platforms: [.macOS(.v10_15), .iOS(.v13), .tvOS(.v13), .watchOS(.v6)],
     products: [
-        .library(name: "LayoutInspector", targets: ["LayoutInspector"]),
+        .library(
+            name: "LayoutInspector",
+            targets: ["LayoutInspector"]
+        ),
     ],
     dependencies: [],
     targets: [
