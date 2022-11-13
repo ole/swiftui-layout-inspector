@@ -11,7 +11,7 @@
 		5D2245F228D8FDB400E84C7D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2245F128D8FDB400E84C7D /* ContentView.swift */; };
 		5D2245F428D8FDB500E84C7D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D2245F328D8FDB500E84C7D /* Assets.xcassets */; };
 		5D2245F828D8FDB500E84C7D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D2245F728D8FDB500E84C7D /* Preview Assets.xcassets */; };
-		5D5B048C2921268800758B21 /* DebugLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 5D5B048B2921268800758B21 /* DebugLayout */; };
+		5D5B04922921290F00758B21 /* DebugLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 5D5B04912921290F00758B21 /* DebugLayout */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,7 +21,7 @@
 		5D2245F328D8FDB500E84C7D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5D2245F528D8FDB500E84C7D /* LayoutInspector.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LayoutInspector.entitlements; sourceTree = "<group>"; };
 		5D2245F728D8FDB500E84C7D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		5D5B048A2921266100758B21 /* SwiftUI-LayoutInspector */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "SwiftUI-LayoutInspector"; path = ..; sourceTree = "<group>"; };
+		5D5B048F2921290A00758B21 /* SwiftUI-LayoutInspector */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "SwiftUI-LayoutInspector"; path = ..; sourceTree = "<group>"; };
 		5DB6BE4F28DE4D4E00280F5E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -30,7 +30,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5D5B048C2921268800758B21 /* DebugLayout in Frameworks */,
+				5D5B04922921290F00758B21 /* DebugLayout in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,9 +42,8 @@
 			children = (
 				5DB6BE4F28DE4D4E00280F5E /* README.md */,
 				5D2245EE28D8FDB400E84C7D /* LayoutInspector */,
-				5D5B048A2921266100758B21 /* SwiftUI-LayoutInspector */,
+				5D5B048F2921290A00758B21 /* SwiftUI-LayoutInspector */,
 				5D2245ED28D8FDB400E84C7D /* Products */,
-				5D8B5F7028E600FA00CF3721 /* Frameworks */,
 			);
 			indentWidth = 4;
 			sourceTree = "<group>";
@@ -78,13 +77,6 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		5D8B5F7028E600FA00CF3721 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -102,7 +94,7 @@
 			);
 			name = LayoutInspector;
 			packageProductDependencies = (
-				5D5B048B2921268800758B21 /* DebugLayout */,
+				5D5B04912921290F00758B21 /* DebugLayout */,
 			);
 			productName = LayoutInspector;
 			productReference = 5D2245EC28D8FDB400E84C7D /* LayoutInspector.app */;
@@ -379,7 +371,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		5D5B048B2921268800758B21 /* DebugLayout */ = {
+		5D5B04912921290F00758B21 /* DebugLayout */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DebugLayout;
 		};
