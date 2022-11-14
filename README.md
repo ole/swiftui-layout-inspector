@@ -11,22 +11,22 @@ its own size.
 
 At its core, SwiftUI’s layout algorithm is wonderfully simple:
 
-1.  Each parent view proposes a size to its child view(s). Width and height are
-    both optional values; either one (or both) can be `nil`.
+1.  The parent view proposes a size to its child view(s). Width and height are
+    both optional; either one (or both) can be `nil`.
 
 2.  The child view determines its own size, taking the proposed size into
     account, as well as the sizes of its own children (it’s a recursive
     process).
     
-3.  The child reports its size back to its parent. The parent cannot change the
-    size: in SwiftUI, each view determines its own size.
+3.  The child reports its size back to the parent. The parent can’t change the
+    child’s size (in SwiftUI, each view determines its own size).
     
 4.  The parent view positions its children.
 
 Complex layouts in SwiftUI can be achieved by composing built-in views and view
 modifiers. The tricky part about understanding the layout system is learning the
-layout behavior of the built-in views, many of which are poorly documented (as
-of November 2022). This package aims to help you learn.
+layout behaviors of the built-in views, many of which are poorly documented (as
+of November 2022). The goal of this package is to help you learn.
 
 ## Components
 
