@@ -5,7 +5,7 @@
 // A tool for learning how the SwiftUI layout system works,
 // and for debugging your own layout code.
 //
-// https://github.com/ole/SwiftUI-LayoutInspector/
+// https://github.com/ole/swiftui-layout-inspector/
 //
 // By Ole Begemann, https://oleb.net/
 

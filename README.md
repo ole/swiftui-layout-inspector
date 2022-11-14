@@ -1,4 +1,4 @@
-# [SwiftUI Layout Inspector](https://github.com/ole/SwiftUI-LayoutInspector)
+# [SwiftUI Layout Inspector](https://github.com/ole/swiftui-layout-inspector)
 
 A Swift library (and demo app) for learning how the SwiftUI layout system works,
 and for debugging your own layout code. Inspect the layout behavior of SwiftUI
