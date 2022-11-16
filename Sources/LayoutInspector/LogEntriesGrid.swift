@@ -72,13 +72,7 @@ public struct LogEntriesGrid: View {
             }
             .padding(.vertical, 8)
         }
-        .background {
-            #if os(macOS)
-            Color(white: 0.8)
-            #else
-            Color(uiColor: .secondarySystemBackground)
-            #endif
-        }
+        .background()
     }
 
     private func indentation(level: Int) -> some View {
