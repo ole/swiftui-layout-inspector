@@ -4,7 +4,11 @@
    <FileRef
       location = "group:">
    </FileRef>
-   <FileRef
-      location = "group:/Users/elo/code/SwiftUI-LayoutInspector/DemoApp/LayoutInspectorDemo.xcodeproj">
-   </FileRef>
+   <Group
+      location = "container:"
+      name = "DemoApp">
+      <FileRef
+         location = "group:DemoApp/LayoutInspectorDemo.xcodeproj">
+      </FileRef>
+   </Group>
 </Workspace>
