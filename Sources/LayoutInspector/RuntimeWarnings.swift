@@ -57,7 +57,7 @@
             }
             return UnsafeMutableRawPointer(mutating: #dsohandle)
         }(),
-        log: OSLog(subsystem: "com.apple.runtime-issues", category: "DebugLayout")
+        log: OSLog(subsystem: "com.apple.runtime-issues", category: "LayoutInspector")
     )
 #endif
 
