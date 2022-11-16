@@ -40,18 +40,18 @@ Layout Inspector consists of:
 
 ## Requirements
 
-iOS 16.0 or macOS 13.0 (requires the `Layout` protocol).
+iOS 16.0 or macOS 13.0 (because it requires the `Layout` protocol).
 
 ## Instructions
 
 1.  `import LayoutInspector`
-    
-2.  Add `.debugLayout()` at each point in a view tree where you want to inspect
-    the layout algorithm (what sizes are being proposed and returned).
-    
-3.  At the top of the view tree you want to inspect, add `.startDebugLayout()`.
 
-See the README of the demo app for a complete example.
+2.  At the top of the view tree you want to inspect, insert `.inspectLayout()`.
+    
+3.  Insert `.layoutStep("View label")` at each point in a view tree where you
+    want to inspect the layout algorithm (what sizes are being proposed and
+    returned). This is necessary to inject the helper "views" that observe the
+    layout process.
 
 ## Acknowledgements
 

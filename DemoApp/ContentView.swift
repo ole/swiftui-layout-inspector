@@ -3,42 +3,45 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        Inspector {
-            /// The view tree whose layout you want to inspect. Add `.debugLayout()` calls at
-            /// each point where you want to inspect the layout algorithm, i.e. what sizes are
-            /// being proposed and returned. We call these **inspection points**.
-            hStackExample
+        /// The view tree whose layout you want to inspect. Add `.layoutStep()`
+        /// calls at each point where you want to inspect the layout algorithm,
+        /// i.e. what sizes are being proposed and returned. We call these
+        ///  **inspection points**.
+        VStack {
+            Inspector {
+                hStackExample
+            }
         }
     }
 
     var paddingExample: some View {
         Text("Hello world")
-            .debugLayout("Text")
+            .layoutStep("Text")
             .padding(10)
-            .debugLayout("padding")
+            .layoutStep("padding")
             .border(Color.green)
-            .debugLayout("border")
+            .layoutStep("border")
     }
 
     var hStackExample: some View {
         HStack(spacing: 10) {
             Rectangle().fill(.green)
-                .debugLayout("green")
+                .layoutStep("green")
             Text("Hello world")
-                .debugLayout("Text")
+                .layoutStep("Text")
             Rectangle().fill(.yellow)
-                .debugLayout("yellow")
+                .layoutStep("yellow")
         }
-        .debugLayout("HStack")
+        .layoutStep("HStack")
     }
 
     var fixedSizeExample: some View {
           Text("Lorem ipsum dolor sit amet")
-              .debugLayout("Text")
+              .layoutStep("Text")
               .fixedSize()
-              .debugLayout("fixedSize")
+              .layoutStep("fixedSize")
               .frame(width: 100)
-              .debugLayout("frame")
+              .layoutStep("frame")
               .border(Color.green)
     }
 }
@@ -59,7 +62,7 @@ struct Inspector<Subject: View>: View {
         VStack {
             VStack {
                 subject
-                    .startDebugLayout(selection: selectedView)
+                    .inspectLayout(selection: selectedView)
                     .id(generation)
                     .frame(width: roundedWidth, height: roundedHeight)
                     .overlay {
