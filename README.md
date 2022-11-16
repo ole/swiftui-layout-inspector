@@ -1,6 +1,8 @@
-# [SwiftUI Layout Inspector](https://github.com/ole/swiftui-layout-inspector)
+# SwiftUI Layout Inspector
 
-A Swift library (and demo app) for learning how the SwiftUI layout system works,
+<https://github.com/ole/swiftui-layout-inspector>
+
+A Swift library (and iOS/Mac app) for learning how the SwiftUI layout system works,
 and for debugging your own layout code. Inspect the layout behavior of SwiftUI
 views, i.e. what sizes views propose to their children and how a view determines
 its own size.
@@ -58,3 +60,5 @@ iOS 16.0 or macOS 13.0 (because it requires the `Layout` protocol).
 Idea and initial code based on: [objc.io, Swift Talk episode 318, Inspecting SwiftUI's Layout Process (2022-08-19)](https://talk.objc.io/episodes/S01E318-inspecting-swiftui-s-layout-process)
 
 Runtime warnings in Xcode: [Point-Free, Unobtrusive runtime warnings for libraries (2022-01-03)](https://www.pointfree.co/blog/posts/70-unobtrusive-runtime-warnings-for-libraries)
+
+See also [Credits.md](Credits.md)
