@@ -3,11 +3,8 @@ import SwiftUI
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 extension View {
     /// Inspect the layout for this subtree.
-    public func inspectLayout(selection: String? = nil) -> some View {
-        ClearDebugLayoutLog {
-            self
-        }
-        .environment(\.debugLayoutSelectedViewID, selection)
+    public func inspectLayout() -> some View {
+        self.modifier(InspectLayout())
     }
 
     /// Monitor the layout proposals and responses for this view and add them

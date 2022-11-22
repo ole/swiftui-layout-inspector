@@ -51,9 +51,6 @@ struct Inspector<Subject: View>: View {
 
     @State private var width: CGFloat = 300
     @State private var height: CGFloat = 100
-    @State private var selectedView: String? = nil
-    @State private var generation: Int = 0
-    @ObservedObject private var logStore = LogStore.shared
 
     private var roundedWidth: CGFloat { width.rounded() }
     private var roundedHeight: CGFloat { height.rounded() }
@@ -62,14 +59,14 @@ struct Inspector<Subject: View>: View {
         VStack {
             VStack {
                 subject
-                    .inspectLayout(selection: selectedView)
-                    .id(generation)
+                    .inspectLayout()
                     .frame(width: roundedWidth, height: roundedHeight)
                     .overlay {
                         Rectangle()
                             .strokeBorder(style: StrokeStyle(dash: [5]))
                     }
-                    .padding(.bottom, 16)
+
+                Spacer()
 
                 VStack {
                     LabeledContent {
@@ -93,20 +90,9 @@ struct Inspector<Subject: View>: View {
                         Text("H \(roundedHeight, format: .number.precision(.fractionLength(0)))")
                             .monospacedDigit()
                     }
-
-                    Button("Reset layout cache") {
-                        generation += 1
-                    }
                 }
-                .buttonStyle(.bordered)
             }
             .padding()
-
-            #if os(macOS)
-            LogEntriesTable(logEntries: logStore.log, highlight: $selectedView)
-            #else
-            LogEntriesGrid(logEntries: logStore.log, highlight: $selectedView)
-            #endif
         }
     }
 }

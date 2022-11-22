@@ -19,7 +19,7 @@ public struct LogEntriesGrid: View {
     }
 
     public var body: some View {
-        ScrollView(.vertical) {
+        ScrollView([.vertical, .horizontal]) {
             Grid(alignment: .leadingFirstTextBaseline, horizontalSpacing: 0, verticalSpacing: 0) {
                 // Table header row
                 GridRow {
@@ -72,7 +72,6 @@ public struct LogEntriesGrid: View {
             }
             .padding(.vertical, 8)
         }
-        .background()
     }
 
     private func indentation(level: Int) -> some View {
