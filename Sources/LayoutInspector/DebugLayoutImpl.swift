@@ -5,7 +5,9 @@ struct InspectLayout: ViewModifier {
     @StateObject private var logStore: LogStore = .init()
     @State private var selectedView: String? = nil
     @State private var generation: Int = 0
-    @State private var frame: CGRect = CGRect(x: 0, y: 0, width: 300, height: 300)
+    @State private var inspectorFrame: CGRect = CGRect(x: 0, y: 0, width: 300, height: 300)
+    @State private var contentSize: CGSize? = nil
+    @State private var isPresentingInfoPanel: Bool = false
 
     private static let coordSpaceName = "InspectLayout"
 
@@ -14,32 +16,59 @@ struct InspectLayout: ViewModifier {
             content
                 .id(generation)
                 .environment(\.debugLayoutSelectedViewID, selectedView)
+                .measureSize { size in
+                    // Move inspector UI below the inspected view initially
+                    if contentSize == nil {
+                        inspectorFrame.origin.y = size.height + 8
+                    }
+                    contentSize = size
+                }
         }
         .overlay(alignment: .topLeading) {
             LogEntriesGrid(logEntries: logStore.log, highlight: $selectedView)
                 .safeAreaInset(edge: .bottom) {
-                    Button("Reset layout cache") {
-                        generation &+= 1
-                    }
-                    .buttonStyle(.bordered)
-                    .frame(maxWidth: .infinity)
-                    .background()
-                    .backgroundStyle(.thickMaterial)
+                    toolbar
                 }
                 .resizableAndDraggable(
-                    frame: $frame,
+                    frame: $inspectorFrame,
                     coordinateSpace: .named(Self.coordSpaceName)
                 )
                 .background {
-                    Rectangle()
-                        .fill(.thickMaterial)
+                    Rectangle().fill(.thickMaterial)
                         .shadow(radius: 5)
                 }
-                .frame(width: frame.width, height: frame.height)
-                .offset(x: frame.minX, y: frame.minY)
+                .frame(width: inspectorFrame.width, height: inspectorFrame.height)
+                .offset(x: inspectorFrame.minX, y: inspectorFrame.minY)
                 .coordinateSpace(name: Self.coordSpaceName)
         }
         .environmentObject(logStore)
+    }
+
+    @ViewBuilder private var toolbar: some View {
+        HStack {
+            Button("Reset layout cache") {
+                generation &+= 1
+            }
+            Spacer()
+            Button {
+                isPresentingInfoPanel.toggle()
+            } label: {
+                Image(systemName: "info.circle")
+            }
+            .popover(isPresented: $isPresentingInfoPanel) {
+                VStack(alignment: .leading) {
+                    Text("SwiftUI Layout Inspector")
+                        .font(.headline)
+                    Link("GitHub", destination: URL(string: "https://github.com/ole/swiftui-layout-inspector")!)
+                }
+                .padding()
+            }
+            .presentationDetents([.medium])
+        }
+        .padding()
+        .frame(maxWidth: .infinity)
+        .background()
+        .backgroundStyle(.thinMaterial)
     }
 }
 

@@ -18,63 +18,89 @@ struct ResizableAndDraggableFrame: ViewModifier {
     @Binding var frame: CGRect
     var coordinateSpace: CoordinateSpace
 
-    @State private var isDragging: Bool = false
-    @State private var isResizing: Bool = false
-
     private static let titleBarHeight: CGFloat = 20
 
     func body(content: Content) -> some View {
         content
-            .padding(.vertical, Self.titleBarHeight)
+            .padding(.top, Self.titleBarHeight)
             .overlay {
                 ZStack(alignment: .top) {
                     Rectangle()
                         .frame(height: Self.titleBarHeight)
-                        .foregroundStyle(isDragging ? .pink : .yellow)
-                        .draggable(isDragging: $isDragging, point: $frame.origin, coordinateSpace: coordinateSpace)
+                        .foregroundStyle(.tertiary)
+                        .draggable(point: $frame.origin, coordinateSpace: coordinateSpace)
 
-                    let resizeHandle = Rectangle()
-                        .fill(.green)
+                    let resizeHandle = ResizeHandle()
+                        .fill(.secondary)
                         .frame(width: 20, height: 20)
                     resizeHandle
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                        .draggable(isDragging: $isResizing, point: $frame.topLeading, coordinateSpace: coordinateSpace)
+                        .draggable(point: $frame.topLeading, coordinateSpace: coordinateSpace)
                     resizeHandle
+                        .rotationEffect(.degrees(90))
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-                        .draggable(isDragging: $isResizing, point: $frame.topTrailing, coordinateSpace: coordinateSpace)
+                        .draggable(point: $frame.topTrailing, coordinateSpace: coordinateSpace)
                     resizeHandle
+                        .rotationEffect(.degrees(-90))
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
-                        .draggable(isDragging: $isResizing, point: $frame.bottomLeading, coordinateSpace: coordinateSpace)
+                        .draggable(point: $frame.bottomLeading, coordinateSpace: coordinateSpace)
                     resizeHandle
+                        .rotationEffect(.degrees(180))
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-                        .draggable(isDragging: $isResizing, point: $frame.bottomTrailing, coordinateSpace: coordinateSpace)
+                        .draggable(point: $frame.bottomTrailing, coordinateSpace: coordinateSpace)
                 }
             }
+    }
+}
 
+struct ResizeHandle: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: rect.topLeading)
+        path.addLine(to: rect.topTrailing)
+        path.addLine(to: rect.bottomLeading)
+        path.closeSubpath()
+        return path
     }
 }
 
 extension View {
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    func draggable(isDragging: Binding<Bool>, offset: Binding<CGSize>, coordinateSpace: CoordinateSpace) -> some View {
-        modifier(Draggable(isDragging: isDragging, offset: offset, coordinateSpace: coordinateSpace))
+    func draggable(
+        isDragging: Binding<Bool>? = nil,
+        offset: Binding<CGSize>,
+        coordinateSpace: CoordinateSpace
+    ) -> some View {
+        modifier(Draggable(
+            isDragging: isDragging,
+            offset: offset,
+            coordinateSpace: coordinateSpace
+        ))
     }
 
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    func draggable(isDragging: Binding<Bool>, point pointBinding: Binding<CGPoint>, coordinateSpace: CoordinateSpace) -> some View {
+    func draggable(
+        isDragging: Binding<Bool>? = nil,
+        point pointBinding: Binding<CGPoint>,
+        coordinateSpace: CoordinateSpace
+    ) -> some View {
         let sizeBinding = pointBinding.transform(
             getter: { pt -> CGSize in CGSize(width: pt.x, height: pt.y) },
             setter: { pt, newValue, _ in
                 pt = CGPoint(x: newValue.width, y: newValue.height)
             }
         )
-        return draggable(isDragging: isDragging, offset: sizeBinding, coordinateSpace: coordinateSpace)
+        return draggable(
+            isDragging: isDragging,
+            offset: sizeBinding,
+            coordinateSpace: coordinateSpace
+        )
     }
 }
 
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 struct Draggable: ViewModifier {
-    @Binding var isDragging: Bool
+    var isDragging: Binding<Bool>?
     @Binding var offset: CGSize
     var coordinateSpace: CoordinateSpace
 
@@ -88,7 +114,7 @@ struct Draggable: ViewModifier {
     private var dragGesture: some Gesture {
         DragGesture(coordinateSpace: coordinateSpace)
             .onChanged { gv in
-                isDragging = true
+                isDragging?.wrappedValue = true
                 if let last = lastTranslation {
                     let delta = gv.translation - last
                     offset = offset + delta
@@ -99,7 +125,7 @@ struct Draggable: ViewModifier {
             }
             .onEnded { gv in
                 lastTranslation = nil
-                isDragging = false
+                isDragging?.wrappedValue = false
             }
     }
 }
