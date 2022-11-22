@@ -29,6 +29,7 @@ extension CGRect {
             origin.y += delta.height
             size.width -= delta.width
             size.height -= delta.height
+            self = self.standardized
         }
     }
 
@@ -39,6 +40,7 @@ extension CGRect {
             origin.y += delta.height
             size.width += delta.width
             size.height -= delta.height
+            self = self.standardized
         }
     }
 
@@ -49,6 +51,7 @@ extension CGRect {
             origin.x += delta.width
             size.width -= delta.width
             size.height += delta.height
+            self = self.standardized
         }
     }
 
@@ -58,6 +61,7 @@ extension CGRect {
             let delta = newValue - CGPoint(x: maxX, y: minY)
             size.width += delta.width
             size.height += delta.height
+            self = self.standardized
         }
     }
 }
