@@ -19,7 +19,7 @@ struct InspectLayout: ViewModifier {
             LogEntriesGrid(logEntries: logStore.log, highlight: $selectedView)
                 .safeAreaInset(edge: .bottom) {
                     Button("Reset layout cache") {
-                        generation += 1
+                        generation &+= 1
                     }
                     .buttonStyle(.bordered)
                     .frame(maxWidth: .infinity)
