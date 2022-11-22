@@ -4,7 +4,7 @@ import SwiftUI
 extension View {
     /// Inspect the layout for this subtree.
     public func inspectLayout() -> some View {
-        self.modifier(InspectLayout())
+        modifier(InspectLayout())
     }
 
     /// Monitor the layout proposals and responses for this view and add them
@@ -14,12 +14,6 @@ extension View {
         file: StaticString = #fileID,
         line: UInt = #line
     ) -> some View {
-        DebugLayout(label: label) {
-            self
-        }
-        .onAppear {
-            LogStore.shared.registerViewLabelAndWarnIfNotUnique(label, file: file, line: line)
-        }
-        .modifier(DebugLayoutSelectionHighlight(viewID: label))
+        modifier(DebugLayoutModifier(label: label, file: file, line: line))
     }
 }
