@@ -4,7 +4,7 @@ import SwiftUI
 struct LayoutInspectorDemoApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
         }
     }
 }
