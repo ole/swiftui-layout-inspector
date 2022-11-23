@@ -19,59 +19,59 @@ public struct LogEntriesGrid: View {
     }
 
     public var body: some View {
-        ScrollView([.vertical, .horizontal]) {
-            Grid(alignment: .leadingFirstTextBaseline, horizontalSpacing: 0, verticalSpacing: 0) {
-                // Table header row
-                GridRow {
-                    Text("View")
-                    Text("Proposal")
-                    Text("Response")
-                }
-                .font(.headline)
+        Grid(
+            alignment: .leadingFirstTextBaseline,
+            horizontalSpacing: 0,
+            verticalSpacing: 0
+        ) {
+            // Table header row
+            GridRow {
+                Text("View")
+                Text("Proposal")
+                Text("Response")
+            }
+            .bold()
+            .padding(.vertical, Self.tableRowVerticalPadding)
+            .padding(.horizontal, Self.tableRowHorizontalPadding)
+
+            // Table header separator line
+            Rectangle().fill(.secondary)
+                .frame(height: 1)
+                .gridCellUnsizedAxes(.horizontal)
                 .padding(.vertical, Self.tableRowVerticalPadding)
                 .padding(.horizontal, Self.tableRowHorizontalPadding)
 
-                // Table header separator line
-                Rectangle().fill(.secondary)
-                    .frame(height: 1)
-                    .gridCellUnsizedAxes(.horizontal)
-                    .padding(.vertical, Self.tableRowVerticalPadding)
-                    .padding(.horizontal, Self.tableRowHorizontalPadding)
+            // Table rows
+            ForEach(logEntries) { item in
+                let isSelected = highlight == item.label
+                GridRow {
+                    HStack(spacing: 0) {
+                        indentation(level: item.indent)
+                        Text(item.label)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
 
-                // Table rows
-                ForEach(logEntries) { item in
-                    let isSelected = highlight == item.label
-                    GridRow {
-                        HStack(spacing: 0) {
-                            indentation(level: item.indent)
-                            Text(item.label)
-                                .font(.body)
-                        }
+                    Text(item.proposal?.pretty ?? "…")
+                        .monospacedDigit()
+                        .fixedSize()
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
 
-                        Text(item.proposal?.pretty ?? "…")
-                            .monospacedDigit()
-                            .fixedSize()
-                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-
-                        Text(item.response?.pretty ?? "…")
-                            .monospacedDigit()
-                            .fixedSize()
-                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-                    }
-                    .font(.callout)
-                    .padding(.vertical, Self.tableRowVerticalPadding)
-                    .padding(.horizontal, Self.tableRowHorizontalPadding)
-                    .foregroundColor(isSelected ? .white : nil)
-                    .background(isSelected ? Color.accentColor : .clear)
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        highlight = isSelected ? nil : item.label
-                    }
+                    Text(item.response?.pretty ?? "…")
+                        .monospacedDigit()
+                        .fixedSize()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                }
+                .padding(.vertical, Self.tableRowVerticalPadding)
+                .padding(.horizontal, Self.tableRowHorizontalPadding)
+                .foregroundColor(isSelected ? .white : nil)
+                .background(isSelected ? Color.accentColor : .clear)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    highlight = isSelected ? nil : item.label
                 }
             }
-            .padding(.vertical, 8)
         }
+        .padding(.vertical, 8)
     }
 
     private func indentation(level: Int) -> some View {

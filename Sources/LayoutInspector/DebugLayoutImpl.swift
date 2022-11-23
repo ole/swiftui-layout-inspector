@@ -7,6 +7,7 @@ struct InspectLayout: ViewModifier {
     @State private var generation: Int = 0
     @State private var inspectorFrame: CGRect = CGRect(x: 0, y: 0, width: 300, height: 300)
     @State private var contentSize: CGSize? = nil
+    @State private var tableSize: CGSize? = nil
     @State private var isPresentingInfoPanel: Bool = false
 
     private static let coordSpaceName = "InspectLayout"
@@ -34,23 +35,31 @@ struct InspectLayout: ViewModifier {
     }
 
     @ViewBuilder private var inspectorUI: some View {
-        LogEntriesGrid(logEntries: logStore.log, highlight: $selectedView)
-            .safeAreaInset(edge: .bottom) {
-                toolbar
-            }
-            .resizableAndDraggable(
-                frame: $inspectorFrame,
-                coordinateSpace: .named(Self.coordSpaceName)
-            )
-            .background {
-                Rectangle().fill(.thickMaterial)
-                    .shadow(radius: 5)
-            }
-            .cornerRadius(4)
-            .overlay {
-                RoundedRectangle(cornerRadius: 4)
-                    .strokeBorder(.quaternary)
-            }
+        ScrollView([.vertical, .horizontal]) {
+            LogEntriesGrid(logEntries: logStore.log, highlight: $selectedView)
+                .measureSize { size in
+                    tableSize = size
+                }
+        }
+        .frame(maxWidth: tableSize?.width, maxHeight: tableSize?.height)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .safeAreaInset(edge: .bottom) {
+            toolbar
+        }
+        .font(.subheadline)
+        .resizableAndDraggable(
+            frame: $inspectorFrame,
+            coordinateSpace: .named(Self.coordSpaceName)
+        )
+        .background {
+            Rectangle().fill(.thickMaterial)
+                .shadow(radius: 5)
+        }
+        .cornerRadius(4)
+        .overlay {
+            RoundedRectangle(cornerRadius: 4)
+                .strokeBorder(.quaternary)
+        }
     }
 
     @ViewBuilder private var toolbar: some View {
