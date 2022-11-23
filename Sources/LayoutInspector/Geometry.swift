@@ -1,4 +1,5 @@
 import CoreGraphics
+import SwiftUI
 
 extension CGPoint {
     static func + (lhs: CGPoint, rhs: CGPoint) -> CGSize {
@@ -63,5 +64,12 @@ extension CGRect {
             size.height += delta.height
             self = self.standardized
         }
+    }
+
+    func unitPoint(_ unitPoint: UnitPoint) -> CGPoint {
+        CGPoint(
+            x: minX + (maxX - minX) * unitPoint.x,
+            y: minY + (maxY - minY) * unitPoint.y
+        )
     }
 }

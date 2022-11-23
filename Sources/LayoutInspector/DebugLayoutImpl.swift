@@ -25,23 +25,32 @@ struct InspectLayout: ViewModifier {
                 }
         }
         .overlay(alignment: .topLeading) {
-            LogEntriesGrid(logEntries: logStore.log, highlight: $selectedView)
-                .safeAreaInset(edge: .bottom) {
-                    toolbar
-                }
-                .resizableAndDraggable(
-                    frame: $inspectorFrame,
-                    coordinateSpace: .named(Self.coordSpaceName)
-                )
-                .background {
-                    Rectangle().fill(.thickMaterial)
-                        .shadow(radius: 5)
-                }
+            inspectorUI
                 .frame(width: inspectorFrame.width, height: inspectorFrame.height)
                 .offset(x: inspectorFrame.minX, y: inspectorFrame.minY)
                 .coordinateSpace(name: Self.coordSpaceName)
         }
         .environmentObject(logStore)
+    }
+
+    @ViewBuilder private var inspectorUI: some View {
+        LogEntriesGrid(logEntries: logStore.log, highlight: $selectedView)
+            .safeAreaInset(edge: .bottom) {
+                toolbar
+            }
+            .resizableAndDraggable(
+                frame: $inspectorFrame,
+                coordinateSpace: .named(Self.coordSpaceName)
+            )
+            .background {
+                Rectangle().fill(.thickMaterial)
+                    .shadow(radius: 5)
+            }
+            .cornerRadius(4)
+            .overlay {
+                RoundedRectangle(cornerRadius: 4)
+                    .strokeBorder(.quaternary)
+            }
     }
 
     @ViewBuilder private var toolbar: some View {

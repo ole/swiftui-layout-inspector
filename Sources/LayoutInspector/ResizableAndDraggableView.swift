@@ -25,41 +25,77 @@ struct ResizableAndDraggableFrame: ViewModifier {
             .padding(.top, Self.titleBarHeight)
             .overlay {
                 ZStack(alignment: .top) {
-                    Rectangle()
-                        .frame(height: Self.titleBarHeight)
-                        .foregroundStyle(.tertiary)
-                        .draggable(point: $frame.origin, coordinateSpace: coordinateSpace)
-
-                    let resizeHandle = ResizeHandle()
-                        .fill(.secondary)
-                        .frame(width: 20, height: 20)
-                    resizeHandle
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                        .draggable(point: $frame.topLeading, coordinateSpace: coordinateSpace)
-                    resizeHandle
-                        .rotationEffect(.degrees(90))
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-                        .draggable(point: $frame.topTrailing, coordinateSpace: coordinateSpace)
-                    resizeHandle
-                        .rotationEffect(.degrees(-90))
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
-                        .draggable(point: $frame.bottomLeading, coordinateSpace: coordinateSpace)
-                    resizeHandle
-                        .rotationEffect(.degrees(180))
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-                        .draggable(point: $frame.bottomTrailing, coordinateSpace: coordinateSpace)
+                    titleBar
+                    resizeHandles
                 }
             }
     }
+
+    @ViewBuilder private var titleBar: some View {
+        Rectangle()
+            .frame(height: Self.titleBarHeight)
+            .foregroundStyle(.ultraThinMaterial)
+            .overlay {
+                Text("Layout Inspector")
+                    .font(.footnote)
+            }
+            .overlay(alignment: .bottom) {
+                Rectangle()
+                    .foregroundStyle(.quaternary)
+                    .frame(height: 1)
+            }
+            .draggable(point: $frame.origin, coordinateSpace: coordinateSpace)
+            .help("Move")
+    }
+
+    @ViewBuilder private var resizeHandles: some View {
+        let resizeHandle = TriangleStripes()
+            .fill(Color(white: 0.5).opacity(0.5))
+            .frame(width: 15, height: 15)
+            .frame(width: Self.titleBarHeight, height: Self.titleBarHeight, alignment: .topLeading)
+            .contentShape(Rectangle())
+            .help("Resize")
+        resizeHandle
+            .draggable(point: $frame.topLeading, coordinateSpace: coordinateSpace)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        resizeHandle
+            .rotationEffect(.degrees(90))
+            .draggable(point: $frame.topTrailing, coordinateSpace: coordinateSpace)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+        resizeHandle
+            .rotationEffect(.degrees(-90))
+            .draggable(point: $frame.bottomLeading, coordinateSpace: coordinateSpace)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+        resizeHandle
+            .rotationEffect(.degrees(180))
+            .draggable(point: $frame.bottomTrailing, coordinateSpace: coordinateSpace)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+    }
 }
 
-struct ResizeHandle: Shape {
+struct TriangleStripes: Shape {
     func path(in rect: CGRect) -> Path {
+        let stripeCount = 4
+        let spacing: CGFloat = 0.15 // in unit points
+        let stripeWidth = (1 - CGFloat(stripeCount - 1) * spacing) / CGFloat(stripeCount)
+
         var path = Path()
+        // First stripe is special
         path.move(to: rect.topLeading)
-        path.addLine(to: rect.topTrailing)
-        path.addLine(to: rect.bottomLeading)
+        path.addLine(to: rect.unitPoint(.init(x: stripeWidth, y: 0)))
+        path.addLine(to: rect.unitPoint(.init(x: 0, y: stripeWidth)))
         path.closeSubpath()
+
+        for stripe in 1..<stripeCount {
+            let start = CGFloat(stripe) * (stripeWidth + spacing)
+            let end = start + stripeWidth
+            path.move(to: rect.unitPoint(.init(x: start, y: 0)))
+            path.addLine(to: rect.unitPoint(.init(x: end, y: 0)))
+            path.addLine(to: rect.unitPoint(.init(x: 0, y: end)))
+            path.addLine(to: rect.unitPoint(.init(x: 0, y: start)))
+            path.closeSubpath()
+        }
+
         return path
     }
 }
