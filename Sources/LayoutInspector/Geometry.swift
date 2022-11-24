@@ -57,9 +57,9 @@ extension CGRect {
     }
 
     var bottomTrailing: CGPoint {
-        get { CGPoint(x: maxX, y: minY) }
+        get { CGPoint(x: maxX, y: maxY) }
         set {
-            let delta = newValue - CGPoint(x: maxX, y: minY)
+            let delta = newValue - CGPoint(x: maxX, y: maxY)
             size.width += delta.width
             size.height += delta.height
             self = self.standardized
