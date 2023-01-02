@@ -198,8 +198,8 @@ public final class LogStore: ObservableObject {
     func registerViewLabelAndWarnIfNotUnique(_ label: String, file: StaticString, line: UInt) {
         DispatchQueue.main.async { [self] in
             if viewLabels.contains(label) {
-                let message: StaticString = "Duplicate view label '%s' detected. Use unique labels in layoutStep() calls"
-                runtimeWarning(message, [label], file: file, line: line)
+                let message: StaticString = "%@:%llu: Duplicate view label '%@' detected. Use unique labels in .layoutStep() calls"
+                runtimeWarning(message, [String(describing: file), UInt64(line), label], file: file, line: line)
             }
             viewLabels.insert(label)
         }
