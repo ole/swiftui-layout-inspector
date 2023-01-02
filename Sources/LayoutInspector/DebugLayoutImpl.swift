@@ -31,6 +31,7 @@ struct InspectLayout: ViewModifier {
                 .offset(x: inspectorFrame.minX, y: inspectorFrame.minY)
                 .coordinateSpace(name: Self.coordSpaceName)
         }
+        .environment(\.didCallInspectLayout, true)
         .environmentObject(logStore)
     }
 
@@ -90,21 +91,43 @@ struct InspectLayout: ViewModifier {
     }
 }
 
+enum DidCallInspectLayout: EnvironmentKey {
+    static var defaultValue: Bool = false
+}
+
+extension EnvironmentValues {
+    var didCallInspectLayout: Bool {
+        get { self[DidCallInspectLayout.self] }
+        set { self[DidCallInspectLayout.self] = newValue }
+    }
+}
+
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 struct DebugLayoutModifier: ViewModifier {
     var label: String
     var file: StaticString
     var line: UInt
+    @Environment(\.didCallInspectLayout) private var didCallInspectLayout
+    /// The log store for the current inspectLayout() subtree.
+    ///
+    /// - Important: You must verify that `didCallInspectLayout == true` before accessing
+    ///   this property. Failure to do so will result in a crash as the object won't be
+    ///   in the environment.
     @EnvironmentObject private var logStore: LogStore
 
     func body(content: Content) -> some View {
-        DebugLayout(label: label, logStore: logStore) {
+        if didCallInspectLayout {
+            DebugLayout(label: label, logStore: logStore) {
+                content
+            }
+            .onAppear {
+                logStore.registerViewLabelAndWarnIfNotUnique(label, file: file, line: line)
+            }
+            .modifier(DebugLayoutSelectionHighlight(viewID: label))
+        } else {
+            let _ = runtimeWarning("%@:%llu: Calling .layoutStep() without a matching .inspectLayout() is illegal. Add .inspectLayout() as an ancestor of the view tree you want to inspect.", [String(describing: file), UInt64(line)], file: file, line: line)
             content
         }
-        .onAppear {
-            logStore.registerViewLabelAndWarnIfNotUnique(label, file: file, line: line)
-        }
-        .modifier(DebugLayoutSelectionHighlight(viewID: label))
     }
 }
 
