@@ -2,6 +2,7 @@ import SwiftUI
 
 enum CaseStudy: String, CaseIterable, Identifiable {
     case padding = "padding"
+    case background = "background"
     case fixedSize = "fixedSize"
     case hStack = "HStack"
 
@@ -29,8 +30,6 @@ struct RootView: View {
                     .foregroundStyle(.secondary)
             }
         }
-
-
     }
 }
 
@@ -53,6 +52,8 @@ struct MainContent: View {
             switch caseStudy {
             case .padding:
                 PaddingExample()
+            case .background:
+                BackgroundExample()
             case .fixedSize:
                 FixedSizeExample()
             case .hStack:
