@@ -9,6 +9,7 @@ struct FixedSizeExample: View {
             .frame(width: 100)
             .layoutStep("frame")
             .border(Color.green)
+            .inspectLayout()
     }
 }
 

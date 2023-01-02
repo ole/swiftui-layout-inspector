@@ -11,6 +11,8 @@ struct HStackExample: View {
                 .layoutStep("yellow")
         }
         .layoutStep("HStack")
+        .inspectLayout()
+        .frame(maxHeight: 200)
     }
 }
 

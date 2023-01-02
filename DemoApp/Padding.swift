@@ -9,6 +9,7 @@ struct PaddingExample: View {
             .layoutStep("padding")
             .border(Color.green)
             .layoutStep("border")
+            .inspectLayout()
     }
 }
 

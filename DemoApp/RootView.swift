@@ -59,7 +59,6 @@ struct MainContent: View {
                 HStackExample()
             }
         }
-        .inspectLayout()
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .navigationTitle(caseStudy.label)
