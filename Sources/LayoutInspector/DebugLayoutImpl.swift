@@ -96,6 +96,10 @@ enum DidCallInspectLayout: EnvironmentKey {
 }
 
 extension EnvironmentValues {
+    /// Marker to signal that a valid LogStore environment object has been injected.
+    /// Clients that use `@EnvironmentObject var logStore: LogStore` must verify that
+    /// this value is true before accessing the environment object because it may be
+    /// missing.
     var didCallInspectLayout: Bool {
         get { self[DidCallInspectLayout.self] }
         set { self[DidCallInspectLayout.self] = newValue }
