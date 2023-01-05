@@ -14,7 +14,7 @@ struct InspectLayout: ViewModifier {
     private static let coordSpaceName = "InspectLayout"
 
     func body(content: Content) -> some View {
-        ClearDebugLayoutLog(logStore: logStore) {
+        ClearDebugLayoutLog(actions: logStore.actions) {
             content
                 .id(generation)
                 .environment(\.debugLayoutSelectedViewID, selectedView)
@@ -32,7 +32,7 @@ struct InspectLayout: ViewModifier {
                 .offset(x: inspectorFrame.minX, y: inspectorFrame.minY)
                 .coordinateSpace(name: Self.coordSpaceName)
         }
-        .environment(\.logStore, logStore)
+        .environment(\.debugLayoutActions, logStore.actions)
     }
 
     @ViewBuilder private var inspectorUI: some View {
@@ -92,33 +92,19 @@ struct InspectLayout: ViewModifier {
 }
 
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-enum LogStoreKey: EnvironmentKey {
-    static var defaultValue: LogStore? = nil
-}
-
-@available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-extension EnvironmentValues {
-    var logStore: LogStore? {
-        get { self[LogStoreKey.self] }
-        set { self[LogStoreKey.self] = newValue }
-    }
-}
-
-@available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 struct DebugLayoutModifier: ViewModifier {
     var label: String
     var file: StaticString
     var line: UInt
-    // Using @Environment rather than @EnvironmentObject because we don't want to observe this.
-    @Environment(\.logStore) var logStore: LogStore?
+    @Environment(\.debugLayoutActions) var actions: DebugLayoutActions?
 
     func body(content: Content) -> some View {
-        if let logStore {
-            DebugLayout(label: label, logStore: logStore) {
+        if let actions {
+            DebugLayout(label: label, actions: actions) {
                 content
             }
             .onAppear {
-                logStore.registerViewLabelAndWarnIfNotUnique(label, file: file, line: line)
+                actions.registerViewLabelAndWarnIfNotUnique(label, file, line)
             }
             .modifier(DebugLayoutSelectionHighlight(viewID: label))
         } else {
@@ -133,7 +119,7 @@ struct DebugLayoutModifier: ViewModifier {
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 struct DebugLayout: Layout {
     var label: String
-    var logStore: LogStore
+    var actions: DebugLayoutActions
 
     func sizeThatFits(
         proposal: ProposedViewSize,
@@ -141,9 +127,9 @@ struct DebugLayout: Layout {
         cache: inout ()
     ) -> CGSize {
         assert(subviews.count == 1)
-        logStore.logLayoutStep(label, step: .proposal(proposal))
+        actions.logLayoutStep(label, .proposal(proposal))
         let response = subviews[0].sizeThatFits(proposal)
-        logStore.logLayoutStep(label, step: .response(response))
+        actions.logLayoutStep(label, .response(response))
         return response
     }
 
@@ -161,7 +147,7 @@ struct DebugLayout: Layout {
 /// placed in the view tree.
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 struct ClearDebugLayoutLog: Layout {
-    var logStore: LogStore
+    var actions: DebugLayoutActions
 
     func sizeThatFits(
         proposal: ProposedViewSize,
@@ -170,8 +156,7 @@ struct ClearDebugLayoutLog: Layout {
     ) -> CGSize {
         assert(subviews.count == 1)
         DispatchQueue.main.async {
-            logStore.log.removeAll()
-            logStore.viewLabels.removeAll()
+            actions.clearLog()
         }
         return subviews[0].sizeThatFits(proposal)
     }

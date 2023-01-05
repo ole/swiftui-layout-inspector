@@ -1,5 +1,4 @@
-import Combine
-import Dispatch
+import SwiftUI
 
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 final class LogStore: ObservableObject {
@@ -9,6 +8,19 @@ final class LogStore: ObservableObject {
     init(log: [LogEntry] = []) {
         self.log = log
         self.viewLabels = Set(log.map(\.label))
+    }
+
+    var actions: DebugLayoutActions {
+        DebugLayoutActions(
+            clearLog: clearLog,
+            registerViewLabelAndWarnIfNotUnique: registerViewLabelAndWarnIfNotUnique(_:file:line:),
+            logLayoutStep: logLayoutStep(_:step:)
+        )
+    }
+
+    func clearLog() {
+        log.removeAll()
+        viewLabels.removeAll()
     }
 
     func registerViewLabelAndWarnIfNotUnique(_ label: String, file: StaticString, line: UInt) {
@@ -57,5 +69,25 @@ final class LogStore: ObservableObject {
                 log.append(newEntry)
             }
         }
+    }
+}
+
+@available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+struct DebugLayoutActions {
+    var clearLog: () -> Void
+    var registerViewLabelAndWarnIfNotUnique: (_ label: String, _ file: StaticString, _ line: UInt) -> Void
+    var logLayoutStep: (_ label: String, _ step: LogEntry.Step) -> Void
+}
+
+@available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+enum DebugLayoutActionsKey: EnvironmentKey {
+    static var defaultValue: DebugLayoutActions? = nil
+}
+
+@available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+extension EnvironmentValues {
+    var debugLayoutActions: DebugLayoutActions? {
+        get { self[DebugLayoutActionsKey.self] }
+        set { self[DebugLayoutActionsKey.self] = newValue }
     }
 }
