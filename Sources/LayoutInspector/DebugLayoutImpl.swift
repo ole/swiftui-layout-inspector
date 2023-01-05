@@ -1,6 +1,7 @@
 import SwiftUI
 
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+@MainActor
 struct InspectLayout: ViewModifier {
     // Don't observe LogStore. Avoids an infinite update loop.
     var logStore: LogStore
@@ -92,6 +93,7 @@ struct InspectLayout: ViewModifier {
 }
 
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+@MainActor
 struct DebugLayoutModifier: ViewModifier {
     var label: String
     var file: StaticString
@@ -127,9 +129,13 @@ struct DebugLayout: Layout {
         cache: inout ()
     ) -> CGSize {
         assert(subviews.count == 1)
-        actions.logLayoutStep(label, .proposal(proposal))
+        DispatchQueue.main.async {
+            actions.logLayoutStep(label, .proposal(proposal))
+        }
         let response = subviews[0].sizeThatFits(proposal)
-        actions.logLayoutStep(label, .response(response))
+        DispatchQueue.main.async {
+            actions.logLayoutStep(label, .response(response))
+        }
         return response
     }
 

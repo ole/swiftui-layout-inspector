@@ -1,6 +1,7 @@
 import SwiftUI
 
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+@MainActor
 final class LogStore: ObservableObject {
     @Published var log: [LogEntry]
     var viewLabels: Set<String> = []
@@ -34,49 +35,47 @@ final class LogStore: ObservableObject {
     }
 
     func logLayoutStep(_ label: String, step: LogEntry.Step) {
-        DispatchQueue.main.async { [self] in
-            guard let prevEntry = log.last else {
-                // First log entry → start at indent 0.
-                log.append(LogEntry(label: label, step: step, indent: 0))
-                return
-            }
+        guard let prevEntry = log.last else {
+            // First log entry → start at indent 0.
+            log.append(LogEntry(label: label, step: step, indent: 0))
+            return
+        }
 
-            var newEntry = LogEntry(label: label, step: step, indent: prevEntry.indent)
-            let isSameView = prevEntry.label == label
-            switch (isSameView, prevEntry.step, step) {
-            case (true, .proposal(let prop), .response(let resp)):
-                // Response follows immediately after proposal for the same view.
-                // → We want to display them in a single row.
-                // → Coalesce both layout steps.
-                log.removeLast()
-                newEntry = prevEntry
-                newEntry.step = .proposalAndResponse(proposal: prop, response: resp)
-                log.append(newEntry)
+        var newEntry = LogEntry(label: label, step: step, indent: prevEntry.indent)
+        let isSameView = prevEntry.label == label
+        switch (isSameView, prevEntry.step, step) {
+        case (true, .proposal(let prop), .response(let resp)):
+            // Response follows immediately after proposal for the same view.
+            // → We want to display them in a single row.
+            // → Coalesce both layout steps.
+            log.removeLast()
+            newEntry = prevEntry
+            newEntry.step = .proposalAndResponse(proposal: prop, response: resp)
+            log.append(newEntry)
 
-            case (_, .proposal, .proposal):
-                // A proposal follows a proposal → nested view → increment indent.
-                newEntry.indent += 1
-                log.append(newEntry)
+        case (_, .proposal, .proposal):
+            // A proposal follows a proposal → nested view → increment indent.
+            newEntry.indent += 1
+            log.append(newEntry)
 
-            case (_, .response, .response),
-                (_, .proposalAndResponse, .response):
-                // A response follows a response → last child returns to parent → decrement indent.
-                newEntry.indent -= 1
-                log.append(newEntry)
+        case (_, .response, .response),
+            (_, .proposalAndResponse, .response):
+            // A response follows a response → last child returns to parent → decrement indent.
+            newEntry.indent -= 1
+            log.append(newEntry)
 
-            default:
-                // Keep current indentation.
-                log.append(newEntry)
-            }
+        default:
+            // Keep current indentation.
+            log.append(newEntry)
         }
     }
 }
 
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 struct DebugLayoutActions {
-    var clearLog: () -> Void
-    var registerViewLabelAndWarnIfNotUnique: (_ label: String, _ file: StaticString, _ line: UInt) -> Void
-    var logLayoutStep: (_ label: String, _ step: LogEntry.Step) -> Void
+    var clearLog: @MainActor () -> Void
+    var registerViewLabelAndWarnIfNotUnique: @MainActor (_ label: String, _ file: StaticString, _ line: UInt) -> Void
+    var logLayoutStep: @MainActor (_ label: String, _ step: LogEntry.Step) -> Void
 }
 
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
