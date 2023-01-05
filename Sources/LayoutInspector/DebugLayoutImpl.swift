@@ -3,8 +3,8 @@ import SwiftUI
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 @MainActor
 struct InspectLayout: ViewModifier {
-    // Don't observe LogStore. Avoids an infinite update loop.
-    var logStore: LogStore
+    // Don't observe LogStore. Avoids an infinite update loop when store publishes changes.
+    @State private var logStore: LogStore = .init()
     @State private var selectedView: String? = nil
     @State private var generation: Int = 0
     @State private var inspectorFrame: CGRect = CGRect(x: 0, y: 0, width: 300, height: 300)
@@ -34,6 +34,9 @@ struct InspectLayout: ViewModifier {
                 .coordinateSpace(name: Self.coordSpaceName)
         }
         .environment(\.debugLayoutActions, logStore.actions)
+        .onChange(of: generation) { newValue in
+            logStore = LogStore()
+        }
     }
 
     @ViewBuilder private var inspectorUI: some View {
