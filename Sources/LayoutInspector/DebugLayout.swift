@@ -4,7 +4,7 @@ import SwiftUI
 extension View {
     /// Inspect the layout for this subtree.
     public func inspectLayout() -> some View {
-        modifier(InspectLayout())
+        modifier(InspectLayout(logStore: LogStore()))
     }
 
     /// Monitor the layout proposals and responses for this view and add them

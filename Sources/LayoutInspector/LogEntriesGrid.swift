@@ -2,14 +2,14 @@ import SwiftUI
 
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 public struct LogEntriesGrid: View {
-    var logEntries: [LogEntry]
+    @ObservedObject var logStore: LogStore
     @Binding var highlight: String?
 
     private static let tableRowHorizontalPadding: CGFloat = 8
     private static let tableRowVerticalPadding: CGFloat = 4
 
-    public init(logEntries: [LogEntry], highlight: Binding<String?>? = nil) {
-        self.logEntries = logEntries
+    public init(logStore: LogStore, highlight: Binding<String?>? = nil) {
+        self._logStore = ObservedObject(initialValue: logStore)
         if let binding = highlight {
             self._highlight = binding
         } else {
@@ -42,7 +42,7 @@ public struct LogEntriesGrid: View {
                 .padding(.horizontal, Self.tableRowHorizontalPadding)
 
             // Table rows
-            ForEach(logEntries) { item in
+            ForEach(logStore.log) { item in
                 let isSelected = highlight == item.label
                 GridRow {
                     HStack(spacing: 0) {
@@ -92,6 +92,7 @@ public struct LogEntriesGrid: View {
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 struct LogEntriesGrid_Previews: PreviewProvider {
     static var previews: some View {
-        LogEntriesGrid(logEntries: sampleLogEntries)
+        let logStore = LogStore(log: sampleLogEntries)
+        LogEntriesGrid(logStore: logStore)
     }
 }

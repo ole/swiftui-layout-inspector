@@ -2,7 +2,8 @@ import SwiftUI
 
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 struct InspectLayout: ViewModifier {
-    @StateObject private var logStore: LogStore = .init()
+    // Don't observe LogStore. Avoids an infinite update loop.
+    var logStore: LogStore
     @State private var selectedView: String? = nil
     @State private var generation: Int = 0
     @State private var inspectorFrame: CGRect = CGRect(x: 0, y: 0, width: 300, height: 300)
@@ -31,13 +32,12 @@ struct InspectLayout: ViewModifier {
                 .offset(x: inspectorFrame.minX, y: inspectorFrame.minY)
                 .coordinateSpace(name: Self.coordSpaceName)
         }
-        .environment(\.didCallInspectLayout, true)
-        .environmentObject(logStore)
+        .environment(\.logStore, logStore)
     }
 
     @ViewBuilder private var inspectorUI: some View {
         ScrollView([.vertical, .horizontal]) {
-            LogEntriesGrid(logEntries: logStore.log, highlight: $selectedView)
+            LogEntriesGrid(logStore: logStore, highlight: $selectedView)
                 .measureSize { size in
                     tableSize = size
                 }
@@ -91,18 +91,16 @@ struct InspectLayout: ViewModifier {
     }
 }
 
-enum DidCallInspectLayout: EnvironmentKey {
-    static var defaultValue: Bool = false
+@available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+enum LogStoreKey: EnvironmentKey {
+    static var defaultValue: LogStore? = nil
 }
 
+@available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 extension EnvironmentValues {
-    /// Marker to signal that a valid LogStore environment object has been injected.
-    /// Clients that use `@EnvironmentObject var logStore: LogStore` must verify that
-    /// this value is true before accessing the environment object because it may be
-    /// missing.
-    var didCallInspectLayout: Bool {
-        get { self[DidCallInspectLayout.self] }
-        set { self[DidCallInspectLayout.self] = newValue }
+    var logStore: LogStore? {
+        get { self[LogStoreKey.self] }
+        set { self[LogStoreKey.self] = newValue }
     }
 }
 
@@ -111,16 +109,11 @@ struct DebugLayoutModifier: ViewModifier {
     var label: String
     var file: StaticString
     var line: UInt
-    @Environment(\.didCallInspectLayout) private var didCallInspectLayout
-    /// The log store for the current inspectLayout() subtree.
-    ///
-    /// - Important: You must verify that `didCallInspectLayout == true` before accessing
-    ///   this property. Failure to do so will result in a crash as the object won't be
-    ///   in the environment.
-    @EnvironmentObject private var logStore: LogStore
+    // Using @Environment rather than @EnvironmentObject because we don't want to observe this.
+    @Environment(\.logStore) var logStore: LogStore?
 
     func body(content: Content) -> some View {
-        if didCallInspectLayout {
+        if let logStore {
             DebugLayout(label: label, logStore: logStore) {
                 content
             }
@@ -196,8 +189,13 @@ struct ClearDebugLayoutLog: Layout {
 
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 public final class LogStore: ObservableObject {
-    @Published public var log: [LogEntry] = []
+    @Published public var log: [LogEntry]
     var viewLabels: Set<String> = []
+
+    init(log: [LogEntry] = []) {
+        self.log = log
+        self.viewLabels = Set(log.map(\.label))
+    }
 
     func registerViewLabelAndWarnIfNotUnique(_ label: String, file: StaticString, line: UInt) {
         DispatchQueue.main.async { [self] in
