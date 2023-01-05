@@ -3,8 +3,9 @@ import SwiftUI
 struct BackgroundExample: View {
     var body: some View {
         Text("Hello world")
+            .layoutStep("Text")
             .padding(10)
-            .layoutStep("Text and padding")
+            .layoutStep("padding")
             .background {
                 Color.blue
                     .layoutStep("background child")
