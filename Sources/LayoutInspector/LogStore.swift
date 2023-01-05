@@ -2,8 +2,8 @@ import Combine
 import Dispatch
 
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-public final class LogStore: ObservableObject {
-    @Published public var log: [LogEntry]
+final class LogStore: ObservableObject {
+    @Published var log: [LogEntry]
     var viewLabels: Set<String> = []
 
     init(log: [LogEntry] = []) {

@@ -1,14 +1,14 @@
 import SwiftUI
 
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-public struct LogEntriesGrid: View {
+struct LogEntriesGrid: View {
     @ObservedObject var logStore: LogStore
     @Binding var highlight: String?
 
     private static let tableRowHorizontalPadding: CGFloat = 8
     private static let tableRowVerticalPadding: CGFloat = 4
 
-    public init(logStore: LogStore, highlight: Binding<String?>? = nil) {
+    init(logStore: LogStore, highlight: Binding<String?>? = nil) {
         self._logStore = ObservedObject(initialValue: logStore)
         if let binding = highlight {
             self._highlight = binding
@@ -18,7 +18,7 @@ public struct LogEntriesGrid: View {
         }
     }
 
-    public var body: some View {
+    var body: some View {
         Grid(
             alignment: .leadingFirstTextBaseline,
             horizontalSpacing: 0,

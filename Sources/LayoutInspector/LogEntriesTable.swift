@@ -1,12 +1,12 @@
 import SwiftUI
 
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-public struct LogEntriesTable: View {
+struct LogEntriesTable: View {
     var logEntries: [LogEntry]
     @Binding var highlight: String?
     @State private var selectedRow: LogEntry.ID? = nil
 
-    public init(logEntries: [LogEntry], highlight: Binding<String?>? = nil) {
+    init(logEntries: [LogEntry], highlight: Binding<String?>? = nil) {
         self.logEntries = logEntries
         if let binding = highlight {
             self._highlight = binding
@@ -16,7 +16,7 @@ public struct LogEntriesTable: View {
         }
     }
 
-    public var body: some View {
+    var body: some View {
         Table(logEntries, selection: $selectedRow) {
             TableColumn("View") { item in
                 let shouldHighlight = highlight == item.label

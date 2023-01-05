@@ -1,19 +1,19 @@
 import SwiftUI
 
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-public struct LogEntry: Identifiable {
-    public enum Step {
+struct LogEntry: Identifiable {
+    enum Step {
         case proposal(ProposedViewSize)
         case response(CGSize)
         case proposalAndResponse(proposal: ProposedViewSize, response: CGSize)
     }
 
-    public var id: UUID = .init()
-    public var label: String
-    public var step: Step
-    public var indent: Int
+    var id: UUID = .init()
+    var label: String
+    var step: Step
+    var indent: Int
 
-    public var proposal: ProposedViewSize? {
+    var proposal: ProposedViewSize? {
         switch step {
         case .proposal(let p): return p
         case .response(_): return nil
@@ -21,7 +21,7 @@ public struct LogEntry: Identifiable {
         }
     }
 
-    public var response: CGSize? {
+    var response: CGSize? {
         switch step {
         case .proposal(_): return nil
         case .response(let r): return r
