@@ -11,38 +11,38 @@ import SwiftUI
 /// Example:
 ///
 ///     struct InteractiveStepper_Previews: PreviewProvider {
-///       static var previews: some View {
-///         WithState(5) { counterBinding in
-///           Stepper(value: counterBinding, in: 0...10) {
-///             Text("Counter: \(counterBinding.wrappedValue)")
-///           }
+///         static var previews: some View {
+///             WithState(5) { counterBinding in
+///                 Stepper(value: counterBinding, in: 0...10) {
+///                     Text("Counter: \(counterBinding.wrappedValue)")
+///                 }
+///             }
 ///         }
-///       }
 ///     }
 ///
-public struct WithState<Value, Content: View>: View {
-  @State private var value: Value
-  let content: (Binding<Value>) -> Content
-  
-  public init(_ value: Value, @ViewBuilder content: @escaping (Binding<Value>) -> Content) {
-    self._value = State(wrappedValue: value)
-    self.content = content
-  }
+struct WithState<Value, Content: View>: View {
+    @State private var value: Value
+    let content: (Binding<Value>) -> Content
 
-  public var body: some View {
-    content($value)
-  }
+    init(_ value: Value, @ViewBuilder content: @escaping (Binding<Value>) -> Content) {
+        self._value = State(wrappedValue: value)
+        self.content = content
+    }
+
+    var body: some View {
+        content($value)
+    }
 }
 
-struct StatefulWrapper_Previews: PreviewProvider {
-  static var previews: some View {
-    WithState(5) { counterBinding in
-      Stepper(value: counterBinding, in: 0...10) {
-        Text("Counter: \(counterBinding.wrappedValue)")
-      }
-      .padding()
+struct WithState_Previews: PreviewProvider {
+    static var previews: some View {
+        WithState(5) { counterBinding in
+            Stepper(value: counterBinding, in: 0...10) {
+                Text("Counter: \(counterBinding.wrappedValue)")
+            }
+            .padding()
+        }
     }
-  }
 }
 
 #endif
